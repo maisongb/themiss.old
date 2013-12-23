@@ -1,0 +1,19 @@
+{
+  "name": "themiss",
+  "version": "o.1.0",
+  "authors": [
+    "foysal ahamed <cfaion341@gmail.com>"
+  ],
+  "description": "the miss application",
+  "main": "[\"public/css/main.css\", \"public/js/plugins.js\"]",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/scripts/plugins",
+    "test",
+    "tests"
+  ]
+}
