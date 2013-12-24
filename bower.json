@@ -1,6 +1,6 @@
 {
   "name": "themiss",
-  "version": "o.1.0",
+  "version": "0.1.0",
   "authors": [
     "foysal ahamed <cfaion341@gmail.com>"
   ],
@@ -8,6 +8,9 @@
   "main": "[\"public/css/main.css\", \"public/js/plugins.js\"]",
   "license": "MIT",
   "private": true,
+  "dependencies": {
+    "foundation": "~5.0.0"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
