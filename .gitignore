@@ -2,7 +2,6 @@
 /vendor
 /app/config/local
 /app/scripts/plugins
-/app/storage
 /node_modules
 composer.phar
 composer.lock
