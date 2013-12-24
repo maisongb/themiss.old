@@ -1,6 +1,6 @@
 /bootstrap/compiled.php
 /vendor
-/app/.sass-cache
+/.sass-cache
 /app/config/local
 /app/scripts/plugins
 /node_modules
