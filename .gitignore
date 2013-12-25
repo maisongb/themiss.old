@@ -2,6 +2,7 @@
 /vendor
 /.sass-cache
 /app/config/local
+/app/config/packages
 /app/scripts/plugins
 /node_modules
 composer.phar
