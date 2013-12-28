@@ -1,6 +1,8 @@
 <?php
 namespace App\Lib;
 use \Sentry;
+use \Session;
+use \Input;
 
 /**
 * Registration Library 
@@ -50,19 +52,19 @@ class Registration{
 	private function login(){
 		if($this->provider == 'email'){
 			$credentials = array(
-	            'email'    => \Input::has('email') ? \Input::get('email') : null,
-	            'password' => \Input::has('password') ? \Input::get('password') : null,
+	            'email'    => Input::has('email') ? Input::get('email') : null,
+	            'password' => Input::has('password') ? Input::get('password') : null,
 	        );
-	        $remember = \Input::has('remember_me') and \Input::get('remember_me') == 'checked';
+	        $remember = Input::has('remember_me') and Input::get('remember_me') == 'checked';
 	    }elseif ($this->provider == 'facebook') {
 	    	//if it's a facebook login, then
-	    	if(!\Input::has('code')){
+	    	if(!Input::has('code')){
 	    		$this->errors = 'Facebook Response Error!';
 	    		return false;
 	    	}
 
 	    	$facebook = \OAuth::consumer('Facebook');
-			$token = $facebook->requestAccessToken(\Input::get('code'));
+			$token = $facebook->requestAccessToken(Input::get('code'));
 
 			$token_str = $token->getAccessToken();
 
@@ -73,9 +75,9 @@ class Registration{
 	    		return false;
 	    	}
 
-			\Session::put('token.facebook', $token_str);
-			\Session::put('facebook.profile', $userdata);
-			\Session::save();
+			Session::put('token.facebook', $token_str);
+			Session::put('facebook.profile', $userdata);
+			Session::save();
 
 	    	$credentials = array(
 	    		'email' => $userdata['email'],
@@ -96,7 +98,7 @@ class Registration{
 	private function login_with_email($credentials, $remember){
 		try{
 	        // Log the user in
-	        $user = \Sentry::authenticate($credentials, $remember);
+	        $user = Sentry::authenticate($credentials, $remember);
 	        return true;
 	    }catch (\Cartalyst\Sentry\Users\LoginRequiredException $e){
 			$error = 'Login field is required.';
@@ -135,8 +137,8 @@ class Registration{
 		        'password' 		=> Input::has('password') ? Input::get('password') : null,
 		    );
 		}elseif($this->provider == 'facebook'){
-			if(\Session::has('facebook.profile')){
-				$profile = \Session::get('facebook.profile');
+			if(Session::has('facebook.profile')){
+				$profile = Session::get('facebook.profile');
 
 				$userdata = array(
 			        'first_name'    => isset($profile['first_name']) ? $profile['first_name'] : null,
@@ -153,7 +155,7 @@ class Registration{
 	private function register_with_email($data){
 		try{
 		    // Let's register a user.
-		    $user = \Sentry::register($data, true);
+		    $user = Sentry::register($data, true);
 		    return true;
 		}catch (Cartalyst\Sentry\Users\LoginRequiredException $e){
 		    $error = 'Login field is required.';
