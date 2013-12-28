@@ -2,8 +2,9 @@
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Cartalyst\Sentry\Users\Eloquent\User as SentryUserModel;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends SentryUserModel implements UserInterface, RemindableInterface {
 
 	/**
 	 * The database table used by the model.
@@ -49,4 +50,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->email;
 	}
 
+	public function test(){
+		echo "test";
+	}
 }

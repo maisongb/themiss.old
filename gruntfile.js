@@ -26,8 +26,16 @@ module.exports = function(grunt) {
       }
     },
     concat: {
+      plugins: {
+        src: [
+          'app/scripts/plugins/modernizr/modernizr.js',
+          'app/scripts/plugins/foundation/js/foundation.js',
+        ],
+        dest: 'public/js/plugins.js'
+      },
       main: {
         src: [
+          'app/scripts/app.js',
         ],
         dest: 'public/js/main.js'
       }

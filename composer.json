@@ -5,7 +5,9 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.1.*",
-		 "cartalyst/sentry": "2.0.*"
+		"cartalyst/sentry": "2.0.*",
+		"facebook/php-sdk": "dev-master",
+		"artdarek/oauth-4-laravel": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
@@ -14,7 +16,8 @@
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",
-			"app/tests/TestCase.php"
+			"app/tests/TestCase.php",
+			"app/lib/common"
 		]
 	},
 	"scripts": {
