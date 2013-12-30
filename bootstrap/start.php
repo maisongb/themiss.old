@@ -26,7 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(array(
 
-	'local' => array('*.local', 'ubuntu'),
+	'local' => array('*.local', 'foysal'),
 	'dev' => array('*.net'),
 
 ));

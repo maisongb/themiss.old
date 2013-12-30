@@ -4,7 +4,7 @@
 	<div class="row">
 		{{ var_dump($profile) }}
 
-		<a href="{{ URL::to('/register/facebook') }}" class="button">
+		<a href="{{ URL::to('/register/instagram') }}" class="button">
 			Confirm
 		</a>
 	</div>

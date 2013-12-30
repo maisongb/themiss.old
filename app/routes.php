@@ -4,12 +4,18 @@ Route::get('/', function(){
 });
 
 Route::get('login', 'LoginController@index');
+
 Route::get('login/facebook', 'LoginController@facebook_signin');
 Route::get('login/facebook/confirm', 'LoginController@confirm_facebook_signup');
+
+Route::get('login/instagram', 'LoginController@instagram_signin');
+Route::get('login/instagram/confirm', 'LoginController@confirm_instagram_signup');
+
 Route::post('login', 'LoginController@signin');
 
 Route::get('register', 'LoginController@register');
 Route::get('register/facebook', 'LoginController@facebook_signup');
+Route::get('register/instagram', 'LoginController@instagram_signup');
 Route::post('register', 'LoginController@signup');
 
 Route::get('dashboard/upload', 'DashboardController@upload');

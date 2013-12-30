@@ -58,35 +58,81 @@ class Registration{
 	        $remember = Input::has('remember_me') and Input::get('remember_me') == 'checked';
 	    }elseif ($this->provider == 'facebook') {
 	    	//if it's a facebook login, then
-	    	if(!Input::has('code')){
-	    		$this->errors = 'Facebook Response Error!';
+	    	$credentials = $this->login_with_facebook();
+
+	    	if($credentials == false)
 	    		return false;
-	    	}
 
-	    	$facebook = \OAuth::consumer('Facebook');
-			$token = $facebook->requestAccessToken(Input::get('code'));
+	    	$remember = true;
+	    }elseif($this->provider == 'instagram'){
+	    	//if it's an instagram login, then
+	    	$credentials = $this->login_with_instagram();
 
-			$token_str = $token->getAccessToken();
-
-			$userdata = json_decode($facebook->request('/me'), true);
-
-	    	if(empty($userdata)){
-	    		$this->errors = 'Facebook Response Error!';
+	    	if($credentials == false)
 	    		return false;
-	    	}
 
-			Session::put('token.facebook', $token_str);
-			Session::put('facebook.profile', $userdata);
-			Session::save();
-
-	    	$credentials = array(
-	    		'email' => $userdata['email'],
-	    		'password' => $userdata['id']
-	    	);
 	    	$remember = true;
 	    }
 
 		return $this->login_with_email($credentials, $remember);
+	}
+
+	public function login_with_instagram(){
+		if(!Input::has('code')){
+    		$this->errors = 'Instagram Response Error!';
+    		return false;
+    	}
+
+    	$instagram = \OAuth::consumer('Instagram');
+		$token = $instagram->requestAccessToken(Input::get('code'));
+
+		$token_str = $token->getAccessToken();
+
+		$userdata = json_decode($instagram->request('users/self'), true);
+
+    	if(empty($userdata['data'])){
+    		$this->errors = 'Instagram Response Error!';
+    		return false;
+    	}
+
+		Session::put('token.instagram', $token_str);
+		Session::put('instagram.profile', $userdata['data']);
+		Session::save();
+
+    	return array(
+    		//instagram doesnt allow email address access so we have to build a dummy email
+    		//and to strengthen the password we will join the id and username together
+    		'email' => $userdata['data']['username'].'@instagram.com',
+    		'password' => $userdata['data']['id'].$userdata['data']['username']
+    	);
+	}
+
+	public function login_with_facebook(){
+		if(!Input::has('code')){
+    		$this->errors = 'Facebook Response Error!';
+    		return false;
+    	}
+
+    	$facebook = \OAuth::consumer('Facebook');
+		$token = $facebook->requestAccessToken(Input::get('code'));
+
+		$token_str = $token->getAccessToken();
+
+		$userdata = json_decode($facebook->request('/me'), true);
+
+    	if(empty($userdata)){
+    		$this->errors = 'Facebook Response Error!';
+    		return false;
+    	}
+
+		Session::put('token.facebook', $token_str);
+		Session::put('facebook.profile', $userdata);
+		Session::save();
+
+    	return array(
+    		'email' => $userdata['email'],
+    		'password' => $userdata['id']
+    	);
 	}
 
 	/*
@@ -145,6 +191,19 @@ class Registration{
 			        'last_name'    	=> isset($profile['last_name']) ? $profile['last_name'] : null,
 			        'email'    		=> isset($profile['email']) ? $profile['email'] : null,
 			        'password' 		=> $profile['id'],
+			    );
+			}
+		}elseif($this->provider == 'instagram'){
+			if(Session::has('instagram.profile')){
+				$profile = Session::get('instagram.profile');
+				$full_name = explode(' ', $profile['full_name']);
+				$email = $profile['username']. '@instagram.com';
+
+				$userdata = array(
+			        'first_name'    => isset($full_name[0]) ? $full_name[0] : null,
+			        'last_name'    	=> isset($full_name[1]) ? $full_name[1] : null,
+			        'email'    		=> isset($email) ? $email : null,
+			        'password' 		=> $profile['id'].$profile['username'],
 			    );
 			}
 		}
