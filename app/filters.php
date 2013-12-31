@@ -44,6 +44,14 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
+Route::filter('loggedin', function()
+{
+	if(Sentry::check()){
+		$user = Sentry::getUser();
+		dd($user);
+	}
+});
+
 /*
 |--------------------------------------------------------------------------
 | Guest Filter

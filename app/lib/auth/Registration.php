@@ -133,7 +133,7 @@ class Registration{
     		'email' => $userdata['email'],
     		'password' => $userdata['id']
     	);
-	}
+	} 
 
 	/*
 	 * @login_with_email method

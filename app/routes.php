@@ -3,20 +3,25 @@ Route::get('/', function(){
 	return View::make('index');
 });
 
-Route::get('login', 'LoginController@index');
+Route::group(array('prefix' => 'login'), function(){
+	Route::get('/', 'LoginController@index');
 
-Route::get('login/facebook', 'LoginController@facebook_signin');
-Route::get('login/facebook/confirm', 'LoginController@confirm_facebook_signup');
+	Route::get('facebook', 'LoginController@facebook_signin');
+	Route::get('facebook/confirm', 'LoginController@confirm_facebook_signup');
 
-Route::get('login/instagram', 'LoginController@instagram_signin');
-Route::get('login/instagram/confirm', 'LoginController@confirm_instagram_signup');
+	Route::get('instagram', 'LoginController@instagram_signin');
+	Route::get('instagram/confirm', 'LoginController@confirm_instagram_signup');
 
-Route::post('login', 'LoginController@signin');
+	Route::post('/', 'LoginController@signin');
+});
 
-Route::get('register', 'LoginController@register');
-Route::get('register/facebook', 'LoginController@facebook_signup');
-Route::get('register/instagram', 'LoginController@instagram_signup');
-Route::post('register', 'LoginController@signup');
+Route::group(array('prefix' => 'register'), function(){
+	Route::get('/', 'RegistrationController@index');
+	Route::post('/', 'RegistrationController@signup');
 
-Route::get('dashboard/upload', 'DashboardController@upload');
+	Route::get('facebook', 'RegistrationController@facebook_signup');
+	Route::get('instagram', 'RegistrationController@instagram_signup');
+});
+
+Route::get('dashboard', 'DashboardController@index');
 Route::get('dashboard/upload/album/{album_id}', 'DashboardController@album');

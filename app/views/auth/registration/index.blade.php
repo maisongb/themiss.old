@@ -26,6 +26,7 @@
 				{{ Form::submit('Sign in', array('class' => 'button')) }}
 			</div>
 		</div>
-	{{ Form::close() }}
-	<a href="{{ $fb_login_uri or '#' }}" class="button">Login With Facebook</a>
+	{{ Form::close() }} 
+	<a href="{{ $fb_login_uri or '#' }}" class="button">Register With Facebook</a>
+	<a href="{{ $instagram_login_uri or '#' }}" class="button">Register With Instagram</a>
 @stop
