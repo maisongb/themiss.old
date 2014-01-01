@@ -5,7 +5,7 @@
 */
 class UserGroupSeeder extends Seeder {
     public function run(){
-    	DB::table('groups')->delete();
+    	DB::table('users_groups')->delete();
     	$this->command->info('Emptied the table groups');
 
         try{

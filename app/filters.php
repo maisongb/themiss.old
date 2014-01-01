@@ -44,11 +44,10 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
-Route::filter('loggedin', function()
-{
+Route::filter('loggedin', function(){
 	if(Sentry::check()){
-		$user = Sentry::getUser();
-		dd($user);
+		//$user = Sentry::getUser();
+		//dd($user);
 	}
 });
 
