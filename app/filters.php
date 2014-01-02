@@ -46,8 +46,14 @@ Route::filter('auth.basic', function()
 
 Route::filter('loggedin', function(){
 	if(Sentry::check()){
-		//$user = Sentry::getUser();
-		//dd($user);
+		$user = Sentry::getUser();
+		return Redirect::to($user->username);
+	}
+});
+
+Route::filter('dashboard', function(){
+	if(!Sentry::check()){
+		return Redirect::to('login');
 	}
 });
 

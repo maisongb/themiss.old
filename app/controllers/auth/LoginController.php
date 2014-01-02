@@ -1,8 +1,17 @@
 <?php
+namespace App\Controllers\Auth;
+
+use \Config;
+use \Input;
+use \OAuth;
+use \Redirect;
+use \Session;
+use \View;
+
 /*
  * LoginController
  */
-class LoginController extends BaseController 
+class LoginController extends \Controller 
 {
 	public function index()
 	{

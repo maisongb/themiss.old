@@ -1,30 +1,56 @@
 <?php
+namespace App\Controllers\Dashboard;
+
+use \Config;
+use \Input;
+use \OAuth;
+use \Redirect;
+use \Session;
+use \View;
+use \App\Lib\Social\SocialProvider;
+
 /*
  * UploadController
  */
 class UploadController extends BaseController {
-	public function facebook(){
-		if(!Session::has('token.facebook'))
-			return 'nope!';
+	public function home($username)
+	{
+		return 'upload/index';
+	}
 
-		$fb = OAuth::consumer('Facebook');
-		$albums = json_decode($fb->request('/me/albums'), true);
+	public function facebookAlbums($username)
+	{
+		$social = new SocialProvider('facebook');
+		$facebook = $social->provider;
 
-		return View::make('dashboard')
+		$albums = $facebook->getAlbums();
+
+		return View::make('dashboard.upload.facebook.albums')
 					->withAlbums($albums['data'])
 					->withToken(Session::get('token.facebook'));
 	}
 
-	public function facebook_album($album_id){
-		if(!Session::has('token.facebook'))
-			return 'nope!';
+	public function facebookPhotos($username, $album_id)
+	{
+		$social = new SocialProvider('facebook');
+		$facebook = $social->provider;
 
-		$fb = OAuth::consumer('Facebook');
+		$photos = $facebook->getPhotos($album_id);
 
-		$photos = json_decode($fb->request('/' .$album_id. '/photos?limit=30'), true);
-
-		return View::make('album')
+		return View::make('dashboard.upload.facebook.pictures')
 					->withPhotos($photos['data'])
 					->withToken(Session::get('token.facebook'));
+	}
+
+	public function instagramPhotos($username)
+	{
+		$social = new SocialProvider('instagram');
+		$instagram = $social->provider;
+
+		$pictures = $instagram->getPhotos();
+
+		return View::make('dashboard.upload.instagram.pictures')
+					->withPictures($pictures['data'])
+					->withToken(Session::get('token.instagram'));
 	}
 } 

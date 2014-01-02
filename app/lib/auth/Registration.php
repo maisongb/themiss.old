@@ -1,5 +1,6 @@
 <?php
 namespace App\Lib\Auth;
+
 use \Sentry;
 use \Session;
 use \Input;

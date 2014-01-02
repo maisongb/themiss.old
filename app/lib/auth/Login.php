@@ -1,5 +1,6 @@
 <?php
 namespace App\Lib\Auth;
+
 use \Sentry;
 use \Session;
 use \Input;
@@ -37,7 +38,7 @@ class Login{
 	        $remember = Input::has('remember_me') and Input::get('remember_me') == 'checked';
 	    }elseif ($this->provider == 'facebook') {
 	    	//if it's a facebook login, then
-	    	$credentials = $this->with_facebook();
+	    	$credentials = $this->withFacebook();
 
 	    	if($credentials == false)
 	    		return false;
@@ -45,7 +46,7 @@ class Login{
 	    	$remember = true;
 	    }elseif($this->provider == 'instagram'){
 	    	//if it's an instagram login, then
-	    	$credentials = $this->with_instagram();
+	    	$credentials = $this->withInstagram();
 
 	    	if($credentials == false)
 	    		return false;
@@ -56,7 +57,7 @@ class Login{
 		return $this->signin($credentials, $remember);
 	}
 
-	public function with_instagram(){
+	public function withInstagram(){
 		if(!Input::has('code')){
     		$this->errors = 'Instagram Response Error!';
     		return false;
@@ -79,14 +80,14 @@ class Login{
 		Session::save();
 
     	return array(
-    		//instagram doesnt allow username address access so we have to build a dummy username
-    		//and to strengthen the password we will join the id and username together
+    		//instagram doesnt allow email address
+    		//to strengthen the password we will join the id and username together
     		'username' => $userdata['data']['username'],
     		'password' => $userdata['data']['id'].$userdata['data']['username']
     	);
 	}
 
-	public function with_facebook(){
+	public function withFacebook(){
 		if(!Input::has('code')){
     		$this->errors = 'Facebook Response Error!';
     		return false;

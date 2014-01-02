@@ -5,7 +5,7 @@
 		@foreach($albums as $album)
 			<div class="small-2 large-4 columns">
 				<figure>
-					<a href="upload/album/{{ $album['id'] }}" class="th">
+					<a href="facebook/album/{{ $album['id'] }}" class="th">
 						<img 
 						src="https://graph.facebook.com/{{ $album['cover_photo'] }}/picture?access_token={{ $token }}" 
 						alt="{{ $album['name'] }}">
