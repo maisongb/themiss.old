@@ -19,6 +19,10 @@
 				{{ Form::text('email', '') }}
 			</div>
 			<div class="large-8 large-centered columns">
+				{{ Form::label('username', 'Username') }}
+				{{ Form::text('username', '') }}
+			</div>
+			<div class="large-8 large-centered columns">
 				{{ Form::label('password', 'Password') }}
 				{{ Form::password('password') }}
 			</div>

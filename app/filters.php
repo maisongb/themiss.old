@@ -55,6 +55,10 @@ Route::filter('dashboard', function(){
 	if(!Sentry::check()){
 		return Redirect::to('login');
 	}
+
+	View::composer('dashboard.*', function ($view){
+		$view->with('profile', Sentry::getUser());
+	});
 });
 
 /*

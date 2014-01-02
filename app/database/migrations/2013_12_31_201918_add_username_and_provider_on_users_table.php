@@ -15,6 +15,7 @@ class AddUsernameAndProviderOnUsersTable extends Migration {
 			Schema::table('users', function(Blueprint $table){
 				$table->string('username')->unique();
 				$table->string('provider');
+				$table->text('access_token');
 			});
 		}
 	}
@@ -28,7 +29,7 @@ class AddUsernameAndProviderOnUsersTable extends Migration {
 		if(Schema::hasTable('users')){
 			Schema::table('users', function(Blueprint $table){
 				$table->dropUnique('users_username_unique');
-				$table->dropColumn('username', 'provider');
+				$table->dropColumn('username', 'provider', 'access_token');
 			});
 		}
 	}

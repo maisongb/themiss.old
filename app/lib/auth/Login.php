@@ -13,6 +13,7 @@ class Login{
 	private $provider;
 	public $status;
 	public $errors;
+	private $access_token;
 
 	function __construct($provider){
 		$available_providers = array('facebook', 'instagram', 'email');
@@ -21,6 +22,7 @@ class Login{
 			throw new \RuntimeException("Oops, the provider isn't compatible!");	
 
 		$this->status = null;
+		$this->access_token = null;
 		$this->provider = $provider;
 	}
 
@@ -32,8 +34,8 @@ class Login{
 	public function execute(){
 		if($this->provider == 'email'){
 			$credentials = array(
-	            'email'    => Input::has('email') ? Input::get('email') : null,
-	            'password' => Input::has('password') ? Input::get('password') : null,
+	            'username'  => Input::has('username') ? Input::get('username') : null,
+	            'password'	=> Input::has('password') ? Input::get('password') : null,
 	        );
 	        $remember = Input::has('remember_me') and Input::get('remember_me') == 'checked';
 	    }elseif ($this->provider == 'facebook') {
@@ -66,8 +68,6 @@ class Login{
     	$instagram = \OAuth::consumer('Instagram');
 		$token = $instagram->requestAccessToken(Input::get('code'));
 
-		$token_str = $token->getAccessToken();
-
 		$userdata = json_decode($instagram->request('users/self'), true);
 
     	if(empty($userdata['data'])){
@@ -75,7 +75,7 @@ class Login{
     		return false;
     	}
 
-		Session::put('token.instagram', $token_str);
+    	$this->access_token = $token->getAccessToken();
 		Session::put('instagram.profile', $userdata['data']);
 		Session::save();
 
@@ -83,7 +83,7 @@ class Login{
     		//instagram doesnt allow email address
     		//to strengthen the password we will join the id and username together
     		'username' => $userdata['data']['username'],
-    		'password' => $userdata['data']['id'].$userdata['data']['username']
+    		'password' => $userdata['data']['id'].$userdata['data']['username'],
     	);
 	}
 
@@ -96,8 +96,6 @@ class Login{
     	$facebook = \OAuth::consumer('Facebook');
 		$token = $facebook->requestAccessToken(Input::get('code'));
 
-		$token_str = $token->getAccessToken();
-
 		$userdata = json_decode($facebook->request('/me'), true);
 
     	if(empty($userdata)){
@@ -105,13 +103,13 @@ class Login{
     		return false;
     	}
 
-		Session::put('token.facebook', $token_str);
+    	$this->access_token = $token->getAccessToken();
 		Session::put('facebook.profile', $userdata);
 		Session::save();
 
     	return array(
     		'username' => $userdata['username'],
-    		'password' => $userdata['id']
+    		'password' => $userdata['id'],
     	);
 	} 
 
@@ -125,6 +123,12 @@ class Login{
 		try{
 	        // Log the user in
 	        $user = Sentry::authenticate($credentials, $remember);
+
+	        if($this->access_token){
+	        	$user->access_token = $this->access_token;
+	        	$user->save();
+	        }
+
 	        return true;
 	    }catch (\Cartalyst\Sentry\Users\LoginRequiredException $e){
 			$error = 'Login field is required.';

@@ -34,7 +34,7 @@ class RegistrationController extends \Controller
         		->withMessages('Registered!');
 		}else{
 			return Redirect::to('auth.registration.index')
-				->withErrors(array('register' => $error))
+				->withErrors(array('register' => $signup->errors))
 				->withInput(Input::except('password'));
 		}
 	}
@@ -48,7 +48,7 @@ class RegistrationController extends \Controller
         		->withMessages('Registered!');
 		}else{
 			return Redirect::to('auth.registration.index')
-				->withErrors(array('register' => $error))
+				->withErrors(array('register' => $signup->errors))
 				->withInput(Input::except('password'));
 		}
 	}
@@ -70,7 +70,7 @@ class RegistrationController extends \Controller
         		->withMessages('Registered!');
 		}else{
 			return Redirect::to('auth.registration.index')
-				->withErrors(array('register' => $error))
+				->withErrors(array('register' => $signup->errors))
 				->withInput(Input::except('password'));
 		}
 	}

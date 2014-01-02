@@ -61,6 +61,7 @@ class Registration
 	        'first_name'    => Input::has('first_name') ? Input::get('first_name') : null,
 	        'last_name'    	=> Input::has('last_name') ? Input::get('last_name') : null,
 	        'email'    		=> Input::has('email') ? Input::get('email') : null,
+	        'username'    	=> Input::has('username') ? Input::get('username') : null,
 	        'password' 		=> Input::has('password') ? Input::get('password') : null,
 	    );
 	}
@@ -114,11 +115,11 @@ class Registration
 		    //assign a group to the user
 		    $user->addGroup($this->group);
 		    return true;
-		}catch (Cartalyst\Sentry\Users\LoginRequiredException $e){
+		}catch (\Cartalyst\Sentry\Users\LoginRequiredException $e){
 		    $error = 'Login field is required.';
-		}catch (Cartalyst\Sentry\Users\PasswordRequiredException $e){
+		}catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e){
 		    $error = 'Password field is required.';
-		}catch (Cartalyst\Sentry\Users\UserExistsException $e){
+		}catch (\Cartalyst\Sentry\Users\UserExistsException $e){
 		    $error = 'User with this login already exists.';
 		}
 

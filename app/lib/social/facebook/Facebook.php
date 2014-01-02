@@ -11,7 +11,7 @@ use \App\Lib\Social\SocialInterface;
 * Facebook Library 
 * @author Foysal Ahamed
 */
-class Facebook extends AbstractSocial implements SocialInterface
+class Facebook extends AbstractSocial
 {
 	public $service_name = 'Facebook';
 	public $token_session_name = 'token.facebook';

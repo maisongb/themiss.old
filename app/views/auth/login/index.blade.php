@@ -7,8 +7,8 @@
 	{{ Form::open(['url' => 'login', 'method' => 'post']) }}
 		<div class="row">
 			<div class="large-8 large-centered columns">
-				{{ Form::label('email', 'Email Address') }}
-				{{ Form::text('email', Input::old('email')) }}
+				{{ Form::label('username', 'Username') }}
+				{{ Form::text('username', Input::old('username')) }}
 			</div>
 			<div class="large-8 large-centered columns">
 				{{ Form::label('password', 'Password') }}

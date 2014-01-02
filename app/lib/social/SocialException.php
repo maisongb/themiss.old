@@ -8,3 +8,4 @@
  */
 
 class NoTokenException extends \Exception {}
+class ProviderNotConnectedException extends \Exception {}

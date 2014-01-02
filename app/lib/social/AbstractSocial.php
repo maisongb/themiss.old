@@ -3,6 +3,7 @@ namespace App\Lib\Social;
 
 use \OAuth;
 use \OAuth\OAuth2\Token\StdOAuth2Token;
+use \Sentry;
 use \Session;
 use \App\Lib\Social\SocialInterface;
 use \App\Lib\Social\NoTokenException;
@@ -14,20 +15,20 @@ use \App\Lib\Social\NoTokenException;
 abstract class AbstractSocial implements SocialInterface
 {
 	public $service_name;
-	public $token_session_name;
 	public $service;
+	public $user;
 
 	function __construct() 
 	{
+		$this->user = Sentry::getUser();
 		$this->service = OAuth::consumer($this->service_name);
 		$this->checkToken();
 	}
 
 	//checks for access token in the session
-	public function sessionHasToken() 
+	public function userHasToken() 
 	{
-		dd(Session::all());
-		return Session::has($this->token_session_name);
+		return strlen($this->user->access_token) > 0;
 	}
 
 	/*
@@ -41,7 +42,7 @@ abstract class AbstractSocial implements SocialInterface
 		if($this->service->getStorage()->hasAccessToken($this->service_name)) 
 			return true;
 
-		if($this->sessionHasToken()) {
+		if($this->userHasToken()) {
 			$this->resetToken();
 			return true;
 		}
@@ -56,7 +57,7 @@ abstract class AbstractSocial implements SocialInterface
 	 */
 	public function resetToken($token = null) 
 	{
-		$token = $token ? $token : Session::get($this->token_session_name);
+		$token = $token ? $token : $this->user->access_token;
 
 		$this->service
 			->getStorage()

@@ -7,8 +7,8 @@ namespace App\Lib\Social;
 */
 interface SocialInterface
 {
-	//checks for access token in the session
-	public function sessionHasToken();
+	//checks for access token in the db
+	public function userHasToken();
 
 	/*
 	 * this method checks if there's a token set in the session

@@ -15,7 +15,12 @@ use \App\Lib\Social\SocialProvider;
 class UploadController extends BaseController {
 	public function home($username)
 	{
-		return 'upload/index';
+		return View::make('dashboard.upload.home');
+	}
+
+	public function save()
+	{
+		dd(Input::file('picture'));
 	}
 
 	public function facebookAlbums($username)

@@ -47,6 +47,10 @@ Route::group(array(
 					'as'	=> 'dashboard.upload',
 					'uses' 	=> 'UploadController@home'
 				));
+				Route::post('/', array(
+					'as'	=> 'dashboard.upload.save',
+					'uses' 	=> 'UploadController@save'
+				));
 				
 				Route::get('facebook', array(
 					'as'		=> 'dashboard.upload.facebook',
