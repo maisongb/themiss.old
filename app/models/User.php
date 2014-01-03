@@ -50,7 +50,7 @@ class User extends SentryUserModel implements UserInterface, RemindableInterface
 		return $this->email;
 	}
 
-	public function test(){
-		echo "test";
+	public function pictures(){
+		return $this->hasMany('Picture', 'user_id');
 	}
 }
