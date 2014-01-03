@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"cartalyst/sentry": "2.0.*",
-		"artdarek/oauth-4-laravel": "dev-master"
+		"artdarek/oauth-4-laravel": "dev-master",
+		"nesbot/Carbon": "1.7.*"
 	},
 	"autoload": {
 		"classmap": [
@@ -21,7 +22,8 @@
 			"app/lib/auth",
 			"app/lib/social",
 			"app/lib/social/facebook",
-			"app/lib/social/instagram"
+			"app/lib/social/instagram",
+			"app/lib/uploader"
 		]
 	},
 	"scripts": {

@@ -1,13 +1,15 @@
 <?php
 namespace App\Controllers\Dashboard;
 
-use \Config;
-use \Input;
-use \OAuth;
-use \Redirect;
-use \Session;
-use \View;
-use \App\Lib\Social\SocialProvider;
+use Config;
+use Input;
+use OAuth;
+use Redirect;
+use Session;
+use View;
+use Sentry;
+use App\Lib\Social\SocialProvider;
+use App\Lib\Uploader\Uploader;
 
 /*
  * UploadController
@@ -20,7 +22,12 @@ class UploadController extends BaseController {
 
 	public function save()
 	{
-		dd(Input::file('picture'));
+		$uploader = new Uploader('save', array(
+			'user' => Sentry::getUser(),
+			'file' => Input::file('picture')
+		));
+
+		dd($uploader->robot->save());
 	}
 
 	public function facebookAlbums($username)
@@ -31,8 +38,7 @@ class UploadController extends BaseController {
 		$albums = $facebook->getAlbums();
 
 		return View::make('dashboard.upload.facebook.albums')
-					->withAlbums($albums['data'])
-					->withToken(Session::get('token.facebook'));
+					->withAlbums($albums['data']);
 	}
 
 	public function facebookPhotos($username, $album_id)
@@ -43,8 +49,7 @@ class UploadController extends BaseController {
 		$photos = $facebook->getPhotos($album_id);
 
 		return View::make('dashboard.upload.facebook.pictures')
-					->withPhotos($photos['data'])
-					->withToken(Session::get('token.facebook'));
+					->withPhotos($photos['data']);
 	}
 
 	public function instagramPhotos($username)
@@ -55,7 +60,6 @@ class UploadController extends BaseController {
 		$pictures = $instagram->getPhotos();
 
 		return View::make('dashboard.upload.instagram.pictures')
-					->withPictures($pictures['data'])
-					->withToken(Session::get('token.instagram'));
+					->withPictures($pictures['data']);
 	}
 } 
