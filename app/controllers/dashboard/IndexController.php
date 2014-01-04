@@ -1,12 +1,14 @@
 <?php
 namespace App\Controllers\Dashboard;
 
-use \Config;
-use \Input;
-use \OAuth;
-use \Redirect;
-use \Session;
-use \View;
+use Config;
+use Input;
+use OAuth;
+use Sentry;
+use Redirect;
+use Session;
+use View;
+use \App\Models\Picture;
 
 /*
  * IndexController
@@ -14,6 +16,11 @@ use \View;
 class IndexController extends BaseController
 {
 	public function home($username){
-		dd($username);
+		$user = Sentry::getUser();
+
+		$pictures = Picture::with('user')->get();
+
+		return View::make('pictures.list')
+			->withPictures($pictures);
 	}
 }

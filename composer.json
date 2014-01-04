@@ -15,6 +15,7 @@
 			"app/controllers",
 			"app/controllers/auth",
 			"app/controllers/dashboard",
+			"app/controllers/pictures",
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",

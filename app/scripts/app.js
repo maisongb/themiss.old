@@ -1,3 +1,6 @@
+App = typeof App == 'undefined' ? {} : App;
+App.Events = jQuery({});
+
 jQuery(function($){
 	var $selector_form = $('.social-picture-selector');
 

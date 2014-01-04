@@ -68,3 +68,8 @@ Route::group(array(
 				));
 		});
 });
+
+Route::post('pictures/vote/add', array(
+	'as' => 'pictures.vote.add',
+	'uses' => '\App\Controllers\Pictures\IndexController@addVote'
+));

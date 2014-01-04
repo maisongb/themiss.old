@@ -18,7 +18,6 @@
 	
 	{{ HTML::script('http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js') }}
 	{{ HTML::script('http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js') }}
-	{{ HTML::script('js/plugins.min.js') }}
 </head>
 <body>
 
@@ -28,6 +27,7 @@
 
 	@include('layouts.bottom')
 	
+	{{ HTML::script('js/plugins.min.js') }}
 	{{ HTML::script('js/main.min.js') }}
 </body>
 </html>

@@ -20,6 +20,7 @@ module.exports = function(grunt) {
       main: {
         src: [
           'app/scripts/app.js',
+          'app/scripts/votes.js',
         ],
         dest: 'public/js/main.js'
       }
