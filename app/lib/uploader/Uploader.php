@@ -13,21 +13,53 @@ use App\Lib\Uploader\Hoarder;
 class Uploader
 {
 	public $user;
+	public $picture;
+	public $provider;
 	public $robot;
+	public $uploaded_pictures;
 
-	function __construct($action, $params)
+	function __construct($params)
 	{
-		if(isset($params['user']) && !empty($params['user']))
-			$this->user = $params['user'];
+		$this->user 	= isset($params['user']) && !empty($params['user']) ? $params['user'] : null;
+		$this->picture 	= isset($params['picture']) && !empty($params['picture']) ? $params['picture'] : null;
+		$this->provider = isset($params['provider']) && !empty($params['provider']) ? $params['provider'] : null;
+	}
 
-		switch ($action) {
-			case 'save':
-				$this->robot = new Hoarder($params['file'], $this->user);
+	public function startRobot()
+	{
+		switch ($this->provider) {
+			case 'user':
+				$this->robot = new Hoarder($this->picture, $this->user);
+				break;
+
+			case 'facebook':
+				$this->robot = new Transporter($this->picture, $this->user);
 				break;
 			
 			default:
-				# code...
 				break;
 		}
+
+		return $this;
+	}
+
+	public function savePicture()
+	{
+		if ($this->robot instanceof Hoarder) {
+			$this->robot->save();
+			$pictures = $this->robot->file_info();
+			$this->uploaded_pictures = array($pictures['path']);
+		} elseif ($this->robot instanceof Transporter) {
+			$this->uploaded_pictures = $this->robot->file_info;
+		}
+
+		return $this;
+	}
+
+	public function stopRobot()
+	{
+		
+
+		return $this;
 	}
 }

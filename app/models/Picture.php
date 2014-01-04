@@ -5,7 +5,7 @@ use Eloquent;
 
 class Picture extends Eloquent {
 	protected $table = 'pictures';
-	protected $fillable = array('*');
+	protected $guarded = array();
 
 	public function user()
 	{

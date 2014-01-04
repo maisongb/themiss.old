@@ -10,6 +10,7 @@ use View;
 use Sentry;
 use App\Lib\Social\SocialProvider;
 use App\Lib\Uploader\Uploader;
+use App\Models\Picture;
 
 /*
  * UploadController
@@ -22,12 +23,21 @@ class UploadController extends BaseController {
 
 	public function save()
 	{
-		$uploader = new Uploader('save', array(
-			'user' => Sentry::getUser(),
-			'file' => Input::file('picture')
+		$uploader = new Uploader(array(
+			'user' 		=> Sentry::getUser(),
+			'picture' 	=> Input::file('picture') ? : Input::get('picture'),
+			'provider' 	=> Input::get('provider'),
 		));
+		
+		$uploader->startRobot()->savePicture()->stopRobot();
 
-		dd($uploader->robot->save());
+		foreach ($uploader->uploaded_pictures as $pic) {
+			Picture::create(array(
+				'user_id' 	=> $uploader->user->id,
+				'url'		=> $pic,
+				'provider'	=> $uploader->provider,
+			));
+		}
 	}
 
 	public function facebookAlbums($username)

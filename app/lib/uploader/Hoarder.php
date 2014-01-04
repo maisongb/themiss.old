@@ -20,8 +20,6 @@ class Hoarder
 		$this->user = $user;
 		$this->file = $file;
 		$this->setUserDir();
-
-
 	}
 
 	/*
@@ -61,13 +59,17 @@ class Hoarder
 		$file_ext = $this->file->getClientOriginalExtension();
 		$file_name = time() .'_'. $this->user->id .'.'. $file_ext;
 
-		if($this->isValidExtension($file_ext)){
+		if ($this->isValidExtension($file_ext)) {
 			$this->file->move($this->user_dir, $filename);
 
 			$this->file_info = array(
 				'path' => $this->user_dir . $filename,
 				'size' => $this->file->getSize()
 			);
+
+			return true;
+		} else {
+
 		}
 	}
 

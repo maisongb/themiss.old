@@ -7,9 +7,14 @@ namespace App\Lib\Uploader;
 */
 class Transporter
 {
-	
-	function __construct($from, $to)
+	public $user;
+	public $picture;
+	public $file_info;
+
+	function __construct($picture, $user)
 	{
-		
+		$this->user = $user;
+		$this->picture = $picture;
+		$this->file_info = $picture;
 	}
 }
