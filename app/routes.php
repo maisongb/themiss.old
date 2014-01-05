@@ -5,12 +5,16 @@ Route::get('/', function(){
 });
 
 //All te routes regarding the /login path
-Route::group(array('prefix' => 'login', 'before' => 'loggedin'), function(){
-	Route::get('/', '\App\Controllers\Auth\LoginController@index');
-	Route::post('/', '\App\Controllers\Auth\LoginController@signin');
+Route::group(array(
+	'prefix' => 'login', 
+	'namespace'	=> '\App\Controllers\Auth',
+	'before' => 'loggedin'
+), function(){
+	Route::get('/', 'LoginController@index');
+	Route::post('/', 'LoginController@signin');
 
-	Route::get('facebook', '\App\Controllers\Auth\LoginController@facebookSignin');
-	Route::get('instagram', '\App\Controllers\Auth\LoginController@instagramSignin');
+	Route::get('facebook', 'LoginController@facebookSignin');
+	Route::get('instagram', 'LoginController@instagramSignin');
 });
 
 Route::get('logout', function(){
@@ -19,57 +23,78 @@ Route::get('logout', function(){
 });
 
 //All te routes regarding the /register path
-Route::group(array('prefix' => 'register', 'before' => 'loggedin'), function(){
-	Route::get('/', '\App\Controllers\Auth\RegistrationController@index');
-	Route::post('/', '\App\Controllers\Auth\RegistrationController@signup');
+Route::group(array(
+	'prefix' 	=> 'register', 
+	'namespace'	=> '\App\Controllers\Auth',
+	'before' 	=> 'loggedin'
+), function(){
+	Route::get('/', 'RegistrationController@index');
+	Route::post('/', 'RegistrationController@signup');
 
-	Route::get('facebook', '\App\Controllers\Auth\RegistrationController@facebookSignup');
-	Route::get('instagram', '\App\Controllers\Auth\RegistrationController@instagramSignup');
+	Route::get('facebook', 'RegistrationController@facebookSignup');
+	Route::get('instagram', 'RegistrationController@instagramSignup');
 
-	Route::get('facebook/confirm', '\App\Controllers\Auth\RegistrationController@confirmFacebookSignup');
-	Route::get('instagram/confirm', '\App\Controllers\Auth\RegistrationController@confirmInstagramSignup');
+	Route::get('facebook/confirm', 'RegistrationController@confirmFacebookSignup');
+	Route::get('instagram/confirm', 'RegistrationController@confirmInstagramSignup');
 });
 
-Route::group(array(
-		'prefix' 	=> '{username}', 
-		'namespace'	=> '\App\Controllers\Dashboard',
-		'before' 	=> 'dashboard',
-	), function (){
+Route::group(array('prefix' => '{username}'), function (){
+
+	Route::group(array('namespace' => '\App\Controllers\Profile'), function(){
 		Route::get('/', array(
-			'as'	=> 'dashboard.home',
+			'as'	=> 'profile.home',
 			'uses' 	=> 'IndexController@home'
 		));
+	});
 
-		Route::group(array(
-				'prefix' 	=> 'upload'
-			), function() {
-				Route::get('/', array(
-					'as'	=> 'dashboard.upload',
-					'uses' 	=> 'UploadController@home'
-				));
-				Route::post('/', array(
-					'as'	=> 'dashboard.upload.save',
-					'uses' 	=> 'UploadController@save'
-				));
-				
-				Route::get('facebook', array(
-					'as'		=> 'dashboard.upload.facebook',
-					'uses' 		=> 'UploadController@facebookAlbums'
-				));
+	Route::group(array(
+		'prefix' 	=> 'dashboard', 
+		'namespace'	=> '\App\Controllers\Dashboard',
+		'before' 	=> 'dashboard',
+	), function() {
+		Route::group(array('prefix' => 'upload'), function(){
+			Route::get('/', array(
+				'as'	=> 'dashboard.upload',
+				'uses' 	=> 'UploadController@home'
+			));
+			Route::post('/', array(
+				'as'	=> 'dashboard.upload.save',
+				'uses' 	=> 'UploadController@save'
+			));
+			
+			Route::get('facebook', array(
+				'as'		=> 'dashboard.upload.facebook',
+				'uses' 		=> 'UploadController@facebookAlbums'
+			));
 
-				Route::get('facebook/album/{album_id}', array(
-					'as'		=> 'dashboard.upload.facebook.album',
-					'uses' 		=> 'UploadController@facebookPhotos'
-				));
+			Route::get('facebook/album/{album_id}', array(
+				'as'		=> 'dashboard.upload.facebook.album',
+				'uses' 		=> 'UploadController@facebookPhotos'
+			));
 
-				Route::get('instagram', array(
-					'as'	=> 'dashboard.upload.instagram',
-					'uses' 	=> 'UploadController@instagramPhotos'
-				));
+			Route::get('instagram', array(
+				'as'	=> 'dashboard.upload.instagram',
+				'uses' 	=> 'UploadController@instagramPhotos'
+			));
 		});
+	});
 });
 
 Route::post('pictures/vote/add', array(
 	'as' => 'pictures.vote.add',
 	'uses' => '\App\Controllers\Pictures\IndexController@addVote'
 ));
+
+Route::post('profile/follow', array(
+	'as'	=> 'profile.follow',
+	'uses' 	=> '\App\Controllers\Profile\IndexController@follow'
+));
+Route::post('profile/unfollow', array(
+	'as'	=> 'profile.unfollow',
+	'uses' 	=> '\App\Controllers\Profile\IndexController@unfollow'
+));
+
+Route::get('test/test', function ()
+{	
+	dd();
+});

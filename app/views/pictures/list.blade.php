@@ -1,6 +1,4 @@
-@extends ('layouts.master')
-
-@section('body')
+@section('pictures_list')
 	<div class="row">
 		@foreach($pictures as $picture)
 			<div class="picture-container">

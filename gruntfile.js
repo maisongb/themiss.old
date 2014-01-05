@@ -21,6 +21,7 @@ module.exports = function(grunt) {
         src: [
           'app/scripts/app.js',
           'app/scripts/votes.js',
+          'app/scripts/follow.js',
         ],
         dest: 'public/js/main.js'
       }

@@ -57,7 +57,7 @@ Route::filter('dashboard', function(){
 	}
 
 	View::composer('dashboard.*', function ($view){
-		$view->with('profile', Sentry::getUser());
+		$view->with('user_data', Sentry::getUser());
 	});
 });
 

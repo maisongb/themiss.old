@@ -50,7 +50,15 @@ class User extends SentryUserModel implements UserInterface, RemindableInterface
 		return $this->email;
 	}
 
-	public function pictures(){
+	public function pictures()
+	{
 		return $this->hasMany('Picture', 'user_id');
+	}
+
+	public function hasFollowed($user_id)
+	{
+		return \App\Models\Follow::where('follower_id', $this->id)
+			->where('user_id', $user_id)
+			->first();
 	}
 }

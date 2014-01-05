@@ -3,9 +3,9 @@ namespace App\Models;
 
 use Eloquent;
 
-class Picture extends Eloquent {
+class Follow extends Eloquent {
 	protected $table = 'follows';
-	protected $fillable = array('*');
+	protected $guarded = array();
 
 	public function user()
 	{
