@@ -33,7 +33,7 @@ class Uploader
 				break;
 
 			case 'facebook':
-				$this->robot = new Transporter($this->picture, $this->user);
+				$this->robot = new Hoarder($this->picture, $this->user);
 				break;
 			
 			default:
