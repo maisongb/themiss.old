@@ -77,7 +77,6 @@ class Login{
 
     	$this->access_token = $token->getAccessToken();
 		Session::put('instagram.profile', $userdata['data']);
-		Session::save();
 
     	return array(
     		//instagram doesnt allow email address
@@ -105,7 +104,6 @@ class Login{
 
     	$this->access_token = $token->getAccessToken();
 		Session::put('facebook.profile', $userdata);
-		Session::save();
 
     	return array(
     		'username' => $userdata['username'],

@@ -16,12 +16,10 @@ class IndexController extends \Controller
 			->where('user_id', $profile->id)
 			->get();
 
-		$user_data = \Sentry::getUser();
-
 		return \View::make('profile.home')
 			->withPictures($pictures)
 			->withProfile($profile)
-			->with('user_data', $user_data);
+			->with('user_data', \Sentry::getUser());
 	}
 
 	public function follow()

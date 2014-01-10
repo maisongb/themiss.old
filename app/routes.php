@@ -96,6 +96,6 @@ Route::post('profile/unfollow', array(
 
 Route::get('test/test', function ()
 {	
-	copy('https://scontent-b.xx.fbcdn.net/hphotos-prn2/1477587_589198871128978_1180460120_s.jpg', public_path().'/pictures/img.jpg');
+	//copy('https://scontent-b.xx.fbcdn.net/hphotos-prn2/1477587_589198871128978_1180460120_s.jpg', public_path().'/pictures/img.jpg');
 	//dd($f);
 });
