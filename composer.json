@@ -8,7 +8,7 @@
 		"cartalyst/sentry": "2.0.*",
 		"artdarek/oauth-4-laravel": "dev-master",
 		"nesbot/Carbon": "1.7.*",
-		"barryvdh/laravel-debugbar": "1.*"
+		"barryvdh/laravel-debugbar": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
@@ -22,11 +22,14 @@
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
+			"app/lib/exceptions",
 			"app/lib/auth",
 			"app/lib/social",
 			"app/lib/social/facebook",
 			"app/lib/social/instagram",
-			"app/lib/uploader"
+			"app/lib/uploader",
+			"app/lib/profile",
+			"app/lib/picture"
 		]
 	},
 	"scripts": {

@@ -1,9 +1,7 @@
 <?php
 namespace App\Models;
 
-use Eloquent;
-
-class Picture extends Eloquent {
+class Picture extends \Eloquent {
 	protected $table = 'pictures';
 	protected $guarded = array();
 

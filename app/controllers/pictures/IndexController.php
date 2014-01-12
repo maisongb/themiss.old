@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers\Pictures;
 
-use \App\Models\Picture;
-use \App\Models\Vote;
+use \App\Lib\Picture\PictureFactory;
+use \App\Lib\Exceptions as AppException;
 
 /*
  * IndexController
@@ -19,25 +19,17 @@ class IndexController extends \Controller
 
 		//if there is no picture id posted, do nothing
 		if(\Input::has('picture_id')){
-			$user = \Sentry::getUser();
-
-			//if there is no logged in user, do nothing and return unauthorized message
-			if (!$user) {
-				$ret['message'] = \Lang::get('pictures.vote.add.unauthorized');
-				return \Response::json($ret);
-			}
-
-			//if everything's okay, attempt to save the vote in the db
-			$vote = Vote::create(array(
-				'voter_id' 		=> $user->id,
-				'picture_id' 	=> \Input::get('picture_id'),
-			));
-
-			//if the vote is inserted in the db, create success message
-			if ($vote) {
+			try{
+				$vote = new PictureFactory(\Input::get('picture_id'));
+				$vote->addVote(\App\Models\User::getUser());
+				
 				$ret['status'] = true;
 				$ret['message'] = \Lang::get('pictures.vote.add.success');
-			}
+			}catch(AppException\ActionUnauthorizedException $e){
+				$ret['message'] = \Lang::get('pictures.vote.add.unauthorized');
+			}catch(AppException\ActionAlreadyDoneException $e){
+				$ret['message'] = \Lang::get('pictures.vote.add.already_voted');
+			}catch(AppException\ActionTechnicalException $e){}
 		}
 
 		//send the json response

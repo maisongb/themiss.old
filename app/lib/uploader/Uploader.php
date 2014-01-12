@@ -47,7 +47,7 @@ class Uploader
 	{
 		if ($this->robot instanceof Hoarder) {
 			$this->robot->save();
-			$pictures = $this->robot->file_info();
+			$pictures = $this->robot->file_info;
 			$this->uploaded_pictures = array($pictures['path']);
 		} elseif ($this->robot instanceof Transporter) {
 			$this->uploaded_pictures = $this->robot->file_info;

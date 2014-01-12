@@ -1,13 +1,6 @@
 <?php
 namespace App\Controllers\Dashboard;
 
-use Config;
-use Input;
-use OAuth;
-use Redirect;
-use Session;
-use View;
-use Sentry;
 use App\Lib\Social\SocialProvider;
 use App\Lib\Uploader\Uploader;
 use App\Models\Picture;
@@ -18,15 +11,15 @@ use App\Models\Picture;
 class UploadController extends BaseController {
 	public function home($username)
 	{
-		return View::make('dashboard.upload.home');
+		return \View::make('dashboard.upload.home');
 	}
 
-	public function save()
+	public function save($username)
 	{
 		$uploader = new Uploader(array(
-			'user' 		=> Sentry::getUser(),
-			'picture' 	=> Input::file('picture') ? : Input::get('picture'),
-			'provider' 	=> Input::get('provider'),
+			'user' 		=> \Sentry::getUser(),
+			'picture' 	=> \Input::file('picture') ? : \Input::get('picture'),
+			'provider' 	=> \Input::get('provider'),
 		));
 		
 		$uploader->startRobot()->savePicture()->stopRobot();
@@ -38,6 +31,8 @@ class UploadController extends BaseController {
 				'provider'	=> $uploader->provider,
 			));
 		}
+
+		return \Redirect::route('profile.home', array('username' => $username));
 	}
 
 	public function facebookAlbums($username)
@@ -47,7 +42,7 @@ class UploadController extends BaseController {
 
 		$albums = $facebook->getAlbums();
 
-		return View::make('dashboard.upload.facebook.albums')
+		return \View::make('dashboard.upload.facebook.albums')
 					->withAlbums($albums['data']);
 	}
 
@@ -58,7 +53,7 @@ class UploadController extends BaseController {
 
 		$photos = $facebook->getPhotos($album_id);
 
-		return View::make('dashboard.upload.facebook.pictures')
+		return \View::make('dashboard.upload.facebook.pictures')
 					->withPhotos($photos['data']);
 	}
 
@@ -69,7 +64,7 @@ class UploadController extends BaseController {
 
 		$pictures = $instagram->getPhotos();
 
-		return View::make('dashboard.upload.instagram.pictures')
+		return \View::make('dashboard.upload.instagram.pictures')
 					->withPictures($pictures['data']);
 	}
 } 

@@ -19,8 +19,7 @@ class CreatePicturesTable extends Migration {
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->string('url');
 			$table->string('provider');
-			$table->string('place');
-			$table->integer('likes');
+			$table->integer('likes')->default(0);
 			$table->timestamps();
 		});
 	}

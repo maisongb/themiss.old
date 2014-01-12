@@ -2,7 +2,7 @@
 
 @section('body')
 	<div class="row">
-		{{ Form::open(['route' => ['dashboard.upload.save', $profile->username], 'method' => 'post', 'class' => 'social-picture-selector']) }}
+		{{ Form::open(['route' => ['dashboard.upload.save', $user_data->username], 'method' => 'post', 'class' => 'social-picture-selector']) }}
 		@foreach($photos as $photo)
 			<div class="small-2 large-4 columns">
 				<figure>

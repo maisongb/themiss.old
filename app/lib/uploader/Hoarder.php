@@ -60,11 +60,12 @@ class Hoarder
 		$file_name = time() .'_'. $this->user->id .'.'. $file_ext;
 
 		if ($this->isValidExtension($file_ext)) {
-			$this->file->move($this->user_dir, $filename);
+			$this->file->move($this->user_dir, $file_name);
 
 			$this->file_info = array(
-				'path' => $this->user_dir . $filename,
-				'size' => $this->file->getSize()
+				'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
+				//weird error
+				//'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
 			);
 
 			return true;
