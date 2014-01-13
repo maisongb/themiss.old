@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers\Profile;
 
-use \App\Models\Picture;
-use \App\Models\Follow;
+use App\Models\Picture as PictureModel;
+use App\Models\Follow as FollowModel;
 
 /*
  * IndexController
@@ -12,7 +12,7 @@ class IndexController extends \Controller
 	public function home($username){
 		$profile = \Sentry::findUserByLogin($username);
 
-		$pictures = Picture::with('user')
+		$pictures = PictureModel::with('user')
 			->where('user_id', $profile->id)
 			->get();
 
@@ -53,7 +53,7 @@ class IndexController extends \Controller
 			}
 
 			//if everything's okay, attempt to save the follow in the db
-			$follow = Follow::create(array(
+			$follow = FollowModel::create(array(
 				'follower_id' 	=> $follower->id,
 				'user_id' 		=> $followed->id,
 			));
@@ -116,5 +116,14 @@ class IndexController extends \Controller
 
 		//send the json response
 		return \Response::json($ret);
+	}
+
+	//single photo controller method
+	public function picture($username, $id){
+		$picture = PictureModel::with('user')->whereId($id)->first();
+
+		return \View::make('profile.photo')
+			->withPicture($picture)
+			->with('user_data', \Sentry::getUser());
 	}
 }

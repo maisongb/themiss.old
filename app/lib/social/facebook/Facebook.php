@@ -34,4 +34,13 @@ class Facebook extends AbstractSocial
 		$request_uri = '/' .$album_id. '/photos?limit='. $limit;
 		return json_decode($this->service->request($request_uri), true);
 	}
+
+	/*
+	 * likes a photo on user's behalf
+	 */
+	public function likePicture($url)
+	{
+		$like = $this->service->request('/me/og.likes?object='. $url);
+		dd(json_decode($like));
+	}
 }

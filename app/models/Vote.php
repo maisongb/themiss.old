@@ -1,9 +1,7 @@
 <?php
 namespace App\Models;
 
-use Eloquent;
-
-class Vote extends Eloquent {
+class Vote extends \Eloquent {
 	protected $table = 'votes';
 	protected $guarded = array();
 
@@ -15,5 +13,10 @@ class Vote extends Eloquent {
 	public function picture()
 	{
 		return $this->belongsTo('Picture', 'picture_id');
+	}
+
+	public function scopeAlreadyLiked($query, $voter, $picture)
+	{
+		return $query->where('voter_id', $voter)->where('picture_id', $picture);
 	}
 }

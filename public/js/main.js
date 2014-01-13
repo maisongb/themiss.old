@@ -20,23 +20,23 @@ App.Votes = {
 	init: function () {
 		var self = this;
 
-		this.button = jQuery('.vote');
+		this.$button = jQuery('.vote');
 		this.handleEvents();
 	},
 
 	handleEvents: function () {
 		var self = this;
-		console.log(self.button);
+		console.log(self.$button);
 
-		self.button.on('click', jQuery.proxy(self.addVote, self));
+		self.$button.on('click', jQuery.proxy(self.addVote, self));
 	},
 
 	addVote: function (e) {
 		e.preventDefault();
 
-		var btn = jQuery(e.currentTarget),
+		var $btn = jQuery(e.currentTarget),
 			send_vote = this.sendVote({
-				'picture_id': btn.data('picture')
+				'picture_id': $btn.data('picture')
 			});
 
 		send_vote.done(function (data) {

@@ -45,6 +45,11 @@ Route::group(array('prefix' => '{username}'), function (){
 			'as'	=> 'profile.home',
 			'uses' 	=> 'IndexController@home'
 		));
+
+		Route::get('photo/{id}', array(
+			'as' => 'pictures.single',
+			'uses' => 'IndexController@picture'
+		));	
 	});
 
 	Route::group(array(
@@ -84,6 +89,10 @@ Route::post('pictures/vote/add', array(
 	'as' => 'pictures.vote.add',
 	'uses' => '\App\Controllers\Pictures\IndexController@addVote'
 ));
+Route::post('pictures/remove', array(
+	'as' => 'pictures.remove',
+	'uses' => '\App\Controllers\Pictures\IndexController@remove'
+));
 
 Route::post('profile/follow', array(
 	'as'	=> 'profile.follow',
@@ -96,6 +105,7 @@ Route::post('profile/unfollow', array(
 
 Route::get('test/test', function ()
 {	
-	//copy('https://scontent-b.xx.fbcdn.net/hphotos-prn2/1477587_589198871128978_1180460120_s.jpg', public_path().'/pictures/img.jpg');
-	//dd($f);
+	$f = new \App\Lib\Social\SocialProvider('facebook');
+	$f = $f->provider;
+	dd($f->likePicture('http://themiss.local/AhmedFoysal/photo/7'));
 });

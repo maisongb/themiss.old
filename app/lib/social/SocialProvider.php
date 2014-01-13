@@ -34,7 +34,7 @@ class SocialProvider
 	{
 		$user = Sentry::getUser();
 
-		if($user->provider != $service_name){
+		if(!$user || $user->provider != $service_name){
 			throw new ProviderNotConnectedException("User has not connected with ".$service_name, 1);
 			return false;
 		}

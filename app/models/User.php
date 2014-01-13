@@ -1,4 +1,5 @@
 <?php
+namespace App\Models;
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
@@ -55,10 +56,8 @@ class User extends SentryUserModel implements UserInterface, RemindableInterface
 		return $this->hasMany('Picture', 'user_id');
 	}
 
-	public function hasFollowed($user_id)
+	public function scopeAlreadyFollowed($query, $follower, $user)
 	{
-		return \App\Models\Follow::where('follower_id', $this->id)
-			->where('user_id', $user_id)
-			->first();
+		return $query->where('follower_id', $follower)->where('user_id', $user);
 	}
 }

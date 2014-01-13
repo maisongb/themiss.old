@@ -33,7 +33,7 @@ class CreateFollowsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('pictures', function($table)
+		Schema::table('follows', function($table)
 		{
 			$table->dropForeign('follows_user_id_foreign');	
 			$table->dropForeign('follows_follower_id_foreign');	
