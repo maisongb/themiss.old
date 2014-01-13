@@ -3,7 +3,6 @@ namespace App\Controllers\Profile;
 
 use App\Models\Picture as PictureModel;
 use App\Models\Follow as FollowModel;
-use App\Models\User as UserModel;
 
 /*
  * IndexController
@@ -11,7 +10,7 @@ use App\Models\User as UserModel;
 class IndexController extends \Controller
 {
 	public function home($username){
-		$profile = UserModel::findUserByLogin($username);
+		$profile = \Sentry::findUserByLogin($username);
 
 		$pictures = PictureModel::with('user')
 			->where('user_id', $profile->id)
