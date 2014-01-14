@@ -5,6 +5,7 @@
 /app/config/packages
 /app/scripts/plugins
 /node_modules
+/public/pictures
 composer.phar
 composer.lock
 .DS_Store

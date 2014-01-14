@@ -7,7 +7,7 @@
 			href="#" 
 			class="follow"
 			data-user="{{$profile->id}}"
-			data-followed="{{ $user_data->hasFollowed($profile->id) ? 'true' : 'false' }}">
+			data-followed="{{ $user_data->alreadyFollowed($profile->id) ? 'true' : 'false' }}">
 			Follow {{$profile->username}}
 		</a>
 	@endif

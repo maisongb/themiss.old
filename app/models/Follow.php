@@ -7,11 +7,11 @@ class Follow extends \Eloquent {
 
 	public function user()
 	{
-		return $this->belongsTo('User', 'user_id');
+		return $this->belongsTo('App\Models\User', 'user_id');
 	}
 
 	public function follower()
 	{
-		return $this->belongsTo('User', 'follower_id');
+		return $this->belongsTo('App\Models\User', 'follower_id');
 	}
 }

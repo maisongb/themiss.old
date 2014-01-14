@@ -7,6 +7,6 @@ class Picture extends \Eloquent {
 
 	public function user()
 	{
-		return $this->belongsTo('User', 'user_id');
+		return $this->belongsTo('App\Models\User', 'user_id');
 	}
 }

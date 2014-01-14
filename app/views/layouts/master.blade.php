@@ -5,6 +5,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>{{ $meta['title'] or 'The Miss' }}</title>
+
+	<meta property="og:title" content="{{ $meta['title'] or 'The Miss' }}"/>
+	<meta property="og:site_name" content="The Miss"/>
+	<meta property="og:image" content="{{ $meta['image'] or URL::to('/public') }}"/>
 	
 	{{ HTML::style('css/plugins.css') }}
 	{{ HTML::style('css/main.css') }}

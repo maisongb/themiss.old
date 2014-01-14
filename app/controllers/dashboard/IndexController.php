@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers\Dashboard;
 
-use \App\Models\Picture;
+use App\Models\Picture;
 
 /*
  * IndexController

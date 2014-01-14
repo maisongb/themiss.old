@@ -53,11 +53,11 @@ class User extends SentryUserModel implements UserInterface, RemindableInterface
 
 	public function pictures()
 	{
-		return $this->hasMany('Picture', 'user_id');
+		return $this->hasMany('App\Models\Picture', 'user_id');
 	}
 
-	public function scopeAlreadyFollowed($query, $follower, $user)
+	public function scopeAlreadyFollowed($query, $user)
 	{
-		return $query->where('follower_id', $follower)->where('user_id', $user);
+		return $query->where('follower_id', $this->id)->where('user_id', $user);
 	}
 }

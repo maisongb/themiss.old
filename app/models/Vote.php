@@ -7,12 +7,12 @@ class Vote extends \Eloquent {
 
 	public function voter()
 	{
-		return $this->belongsTo('User', 'voter_id');
+		return $this->belongsTo('App\Models\User', 'voter_id');
 	}
 
 	public function picture()
 	{
-		return $this->belongsTo('Picture', 'picture_id');
+		return $this->belongsTo('App\Models\Picture', 'picture_id');
 	}
 
 	public function scopeAlreadyLiked($query, $voter, $picture)

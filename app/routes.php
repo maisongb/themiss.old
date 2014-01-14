@@ -107,5 +107,6 @@ Route::get('test/test', function ()
 {	
 	$f = new \App\Lib\Social\SocialProvider('facebook');
 	$f = $f->provider;
-	dd($f->likePicture('http://themiss.local/AhmedFoysal/photo/7'));
+	$f->likePicture('http://themiss.local/AhmedFoysal/photo/16');
+	dd($f->alreadyLikedPicture('http://themiss.local/AhmedFoysal/photo/16'));
 });

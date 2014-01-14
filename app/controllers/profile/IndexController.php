@@ -124,6 +124,7 @@ class IndexController extends \Controller
 
 		return \View::make('profile.photo')
 			->withPicture($picture)
+			->withProfile(\Sentry::findUserByLogin($username))
 			->with('user_data', \Sentry::getUser());
 	}
 }
