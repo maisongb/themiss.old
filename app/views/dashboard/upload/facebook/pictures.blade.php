@@ -8,7 +8,7 @@
 				<figure>
 					<a href="upload/photo/{{ $photo['id'] }}" class="th">
 						<img 
-						src="{{ $photo['picture'] }}" 
+						src="{{ $photo['source'] }}" 
 						alt="{{ '' }}"
 						class="picture">
 					</a>
@@ -18,6 +18,7 @@
 		@endforeach
 
 		{{ Form::hidden('provider', 'facebook') }}
+		{{ Form::hidden('picture') }}
 		<div class="large-8 large-centered columns">
 			{{ Form::submit('Upload File', array('class' => 'button')) }}
 		</div>

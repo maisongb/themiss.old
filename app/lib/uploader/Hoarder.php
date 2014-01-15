@@ -1,8 +1,7 @@
 <?php
 namespace App\Lib\Uploader;
 
-use File;
-use Carbon;
+use App\Lib\Exceptions as AppException;
 
 /**
 * @author Foysal Ahamed
@@ -10,15 +9,17 @@ use Carbon;
 */
 class Hoarder
 {
-	public $user;
+	public $profile;
 	public $user_dir;
 	public $file_info;
 	private $file;
+	private $provider;
 
-	function __construct($file, $user)
+	function __construct($file, $profile, $provider)
 	{
-		$this->user = $user;
+		$this->profile = $profile;
 		$this->file = $file;
+		$this->provider = $provider;
 		$this->setUserDir();
 	}
 
@@ -29,13 +30,13 @@ class Hoarder
 	*/
 	private function setUserDir()
 	{
-		$now = Carbon::now();
+		$now = \Carbon::now();
 
 		// the 'D' means directory, nothing pervy
 		$d_segments = array(
 			public_path(), 
 			'pictures', 
-			$this->user->username, 
+			$this->profile->user->username, 
 			$now->year, 
 			$now->month, 
 			$now->day
@@ -46,8 +47,8 @@ class Hoarder
 		foreach ($d_segments as $segment) {
 			$d_name .= $segment. '/';
 
-			if (! File::isDirectory($d_name)) {
-				File::makeDirectory($d_name, 0777, true);
+			if (! \File::isDirectory($d_name)) {
+				\File::makeDirectory($d_name, 0777, true);
 			}
 		}
 
@@ -56,22 +57,54 @@ class Hoarder
 
 	public function save()
 	{
+		if($this->provider == 'facebook')
+			return $this->saveFromFacebook($this->file);
+
+		return $this->saveFromUser();
+	}
+
+	public function saveFromUser()
+	{
 		$file_ext = $this->file->getClientOriginalExtension();
-		$file_name = time() .'_'. $this->user->id .'.'. $file_ext;
 
-		if ($this->isValidExtension($file_ext)) {
-			$this->file->move($this->user_dir, $file_name);
+		if(!$this->isValidExtension($file_ext))
+			throw new AppException\InvalidFileUpload;
 
-			$this->file_info = array(
-				'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
-				//weird error
-				//'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
-			);
+		//move the uploaded file to the user's directory with appropriate filename
+		$file_name = time() .'_'. $this->profile->user->id .'.'. $file_ext;
+		$this->file->move($this->user_dir, $file_name);
 
-			return true;
-		} else {
+		//set the file info stuff 
+		$this->file_info = array(
+			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
+			//weird error
+			'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
+		);
 
-		}
+		return true;
+	}
+
+	//takes a the url of an image on facebook and copies it to our server
+	public function saveFromFacebook($url)
+	{
+		$file_ext = explode('.', $url);
+		$file_ext = end($file_ext);
+
+		if(!$this->isValidExtension($file_ext))
+			throw new AppException\InvalidFileUpload;
+
+		//copy the file from the url to the user's directory with appropriate filename
+		$file_name = time() .'_'. $this->profile->user->id .'.'. $file_ext;
+		copy($url, $this->user_dir.$file_name);
+
+		//set the file info stuff 
+		$this->file_info = array(
+			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
+			//weird error
+			//'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
+		);
+
+		return true;
 	}
 
 	//checks if a file extension is supported and valid

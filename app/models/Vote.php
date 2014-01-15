@@ -19,9 +19,4 @@ class Vote extends \Eloquent {
 	{
 		return $query->where('voter_id', $voter)->where('picture_id', $picture);
 	}
-
-	public function scopeAlreadyLiked($query, $voter, $picture)
-	{
-		return $query->where('voter_id', $voter)->where('picture_id', $picture);
-	}
 }

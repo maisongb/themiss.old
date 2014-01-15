@@ -19,7 +19,6 @@ class PictureFactory
 		$this->pic = $picture;
 	}
 
-
 	/*
 	 * adds a new vote for a picture
 	 * @param voter - a user object to identify the user

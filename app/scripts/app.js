@@ -7,12 +7,6 @@ jQuery(function($){
 	$selector_form.on('click', '.picture', function (e) {
 		e.preventDefault();
 
-		var input = jQuery('<input />', {
-				'name': 'picture[]',
-				'value': $(this).attr('src'),
-				'type': 'hidden'
-			});
-
-		$selector_form.append(input);
+		jQuery('input[name="picture"]').val($(this).attr('src'));
 	});
 });

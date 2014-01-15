@@ -4,6 +4,7 @@ namespace App\Controllers\Dashboard;
 use App\Lib\Social\SocialProvider;
 use App\Lib\Uploader\Uploader;
 use App\Models\Picture;
+use App\Lib\Profile\ProfileFactory;
 
 /*
  * UploadController
@@ -17,27 +18,26 @@ class UploadController extends BaseController {
 	public function save($username)
 	{
 		$uploader = new Uploader(array(
-			'user' 		=> \Sentry::getUser(),
+			'profile' 	=> new ProfileFactory(\Sentry::getUser()),
 			'picture' 	=> \Input::file('picture') ? : \Input::get('picture'),
 			'provider' 	=> \Input::get('provider'),
 		));
 		
 		$uploader->startRobot()->savePicture()->stopRobot();
 
-		foreach ($uploader->uploaded_pictures as $pic) {
-			Picture::create(array(
-				'user_id' 	=> $uploader->user->id,
-				'url'		=> $pic,
-				'provider'	=> $uploader->provider,
-			));
-		}
+		Picture::create(array(
+			'user_id' 	=> $uploader->profile->user->id,
+			'url'		=> $uploader->uploaded_picture,
+			'provider'	=> $uploader->provider,
+		));
 
 		return \Redirect::route('profile.home', array('username' => $username));
 	}
 
 	public function facebookAlbums($username)
 	{
-		$social = new SocialProvider('facebook');
+		$profile = new ProfileFactory(\Sentry::getUser());
+		$social = new SocialProvider($profile, 'facebook');
 		$facebook = $social->provider;
 
 		$albums = $facebook->getAlbums();
@@ -48,7 +48,8 @@ class UploadController extends BaseController {
 
 	public function facebookPhotos($username, $album_id)
 	{
-		$social = new SocialProvider('facebook');
+		$profile = new ProfileFactory(\Sentry::getUser());
+		$social = new SocialProvider($profile, 'facebook');
 		$facebook = $social->provider;
 
 		$photos = $facebook->getPhotos($album_id);
@@ -59,7 +60,8 @@ class UploadController extends BaseController {
 
 	public function instagramPhotos($username)
 	{
-		$social = new SocialProvider('instagram');
+		$profile = new ProfileFactory(\Sentry::getUser());
+		$social = new SocialProvider($profile, 'instagram');
 		$instagram = $social->provider;
 
 		$pictures = $instagram->getPhotos();

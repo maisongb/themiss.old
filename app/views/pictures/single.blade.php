@@ -2,14 +2,14 @@
 	<div class="row">
 		<div class="picture-container">
 			<figure class="picture">
-				<img src="{{ $picture->url }}" alt="{{ $picture->user->last_name }}">
+				<img src="{{ $picture->url }}" alt="{{ $profile->user->id }}">
 
 			</figure>
 
 			<div class="actions">
 				<div 
 					class="fb-like" 
-					data-href="{{ route('pictures.single', ['username' => $picture->user->username, 'id' => $picture->id]) }}" 
+					data-href="{{ route('pictures.single', ['username' => $profile->user->username, 'id' => $picture->id]) }}" 
 					data-layout="button_count" 
 					data-action="like" 
 					data-show-faces="true" 

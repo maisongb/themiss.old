@@ -42,7 +42,7 @@ class Facebook extends AbstractSocial
 	{
 		if(!$this->alreadyLikedPicture($url)){
 			try{
-				$post_url = '/me/og.likes?access_token='. $this->user->access_token .'&profile='. $url .'.ogp.me%2F390580850990722';
+				$post_url = '/me/og.likes?access_token='. $this->profile->user->access_token .'&profile='. $url .'.ogp.me%2F390580850990722';
 				$like = json_decode($this->service->request($post_url, 'POST'));
 				return $like->data;
 			}catch(OAuth\Common\Http\Exception\TokenResponseException $e){

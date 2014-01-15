@@ -14,4 +14,9 @@ class Follow extends \Eloquent {
 	{
 		return $this->belongsTo('App\Models\User', 'follower_id');
 	}
+
+	public function scopeUserFollows($query, $follower, $user)
+	{
+		return $query->where('follower_id', $follower)->where('user_id', $user);
+	}
 }

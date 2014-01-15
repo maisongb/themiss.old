@@ -16,11 +16,11 @@ abstract class AbstractSocial implements SocialInterface
 {
 	public $service_name;
 	public $service;
-	public $user;
+	public $profile;
 
-	function __construct() 
+	function __construct($profile) 
 	{
-		$this->user = Sentry::getUser();
+		$this->profile = $profile;
 		$this->service = OAuth::consumer($this->service_name);
 		$this->checkToken();
 	}
@@ -28,7 +28,7 @@ abstract class AbstractSocial implements SocialInterface
 	//checks for access token in the session
 	public function userHasToken() 
 	{
-		return strlen($this->user->access_token) > 0;
+		return strlen($this->profile->user->access_token) > 0;
 	}
 
 	/*
@@ -57,7 +57,7 @@ abstract class AbstractSocial implements SocialInterface
 	 */
 	public function resetToken($token = null) 
 	{
-		$token = $token ? $token : $this->user->access_token;
+		$token = $token ? $token : $this->profile->user->access_token;
 
 		$this->service
 			->getStorage()

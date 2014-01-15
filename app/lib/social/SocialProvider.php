@@ -10,35 +10,27 @@ use \Sentry;
 class SocialProvider
 {
 	public $provider;
+	public $profile;
 	
-	function __construct($service_name) 
+	function __construct($profile, $service_name) 
 	{
-		if($this->userHasProvider($service_name)) {
-			switch ($service_name) {
-				case 'facebook':
-					$this->provider = new \App\Lib\Social\Facebook\Facebook();
-					break;
-
-				case 'instagram':
-					$this->provider = new \App\Lib\Social\Instagram\Instagram();
-					break;
-				
-				default:
-					$this->provider = new \App\Lib\Social\Facebook\Facebook();
-					break;
-			}
-		}
-	}
-
-	public function userHasProvider($service_name)
-	{
-		$user = Sentry::getUser();
-
-		if(!$user || $user->provider != $service_name){
+		$this->profile = $profile;
+		
+		if(!$this->profile->hasProvider($service_name))
 			throw new ProviderNotConnectedException("User has not connected with ".$service_name, 1);
-			return false;
-		}
+			
+		switch ($service_name) {
+			case 'facebook':
+				$this->provider = new \App\Lib\Social\Facebook\Facebook($profile);
+				break;
 
-		return true;
+			case 'instagram':
+				$this->provider = new \App\Lib\Social\Instagram\Instagram($profile);
+				break;
+			
+			default:
+				$this->provider = new \App\Lib\Social\Facebook\Facebook($profile);
+				break;
+		}
 	}
 }

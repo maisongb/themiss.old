@@ -21,7 +21,7 @@ class IndexController extends \Controller
 		if(\Input::has('picture_id')){
 			try{
 				$vote = new PictureFactory(\Input::get('picture_id'));
-				$vote->addVote(\App\Models\User::getUser());
+				$vote->addVote(\Sentry::getUser());
 				
 				$ret['status'] = true;
 				$ret['message'] = \Lang::get('pictures.vote.add.success');
