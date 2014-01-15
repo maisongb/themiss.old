@@ -91,12 +91,16 @@ class ProfileFactory
 	 */
 	public function getPictures($params = array())
 	{
-		$pictures = PictureModel::where('user_id', $this->user->id)
+		if(array_get($params, 'voted')){
+			$pictures = $this->user->votes();
+		}else{
+			$pictures = PictureModel::where('user_id', $this->user->id);
+		}
+
+		return $pictures
 			->skip(array_get($params, 'from', 0))
 			->take(array_get($params, 'total', 10))
 			->get();
-
-		return $pictures;
 	}
 
 	/*

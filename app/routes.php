@@ -46,6 +46,11 @@ Route::group(array('prefix' => '{username}'), function (){
 			'uses' 	=> 'IndexController@home'
 		));
 
+		Route::get('voted', array(
+			'as' => 'profile.voted',
+			'uses' => 'IndexController@voted'
+		));	
+
 		Route::get('photo/{id}', array(
 			'as' => 'pictures.single',
 			'uses' => 'IndexController@picture'

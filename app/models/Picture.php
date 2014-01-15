@@ -9,4 +9,9 @@ class Picture extends \Eloquent {
 	{
 		return $this->belongsTo('App\Models\User', 'user_id');
 	}
+
+	public function voters()
+	{
+		return $this->belongsToMany('App\Models\User', 'votes');
+	}
 }

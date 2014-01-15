@@ -104,4 +104,14 @@ class IndexController extends \Controller
 			->withProfile(new ProfileFactory(\Sentry::findUserByLogin($username)))
 			->with('user_data', new ProfileFactory(\Sentry::getUser()));
 	}
+
+	//voted photo controller method
+	public function voted($username){
+		$profile = new ProfileFactory(\Sentry::findUserByLogin($username));
+
+		return \View::make('profile.home')
+			->withPictures($profile->getPictures(array('voted' => true)))
+			->withProfile($profile)
+			->with('user_data', new ProfileFactory(\Sentry::getUser()));
+	}
 }
