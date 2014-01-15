@@ -12,7 +12,7 @@ use App\Lib\Exceptions as AppException;
 */
 class PictureFactory
 {
-	protected $pic;
+	public $pic;
 
 	public function __construct($picture = false)
 	{
@@ -29,14 +29,14 @@ class PictureFactory
 		if(!$voter) throw new AppException\ActionUnauthorizedException('User Not Logged in!');
 		if(!$this->pic) throw new AppException\ActionUnauthorizedException("Action is Not permitted for this object");
 		
-		if(VoteModel::alreadyLiked($voter->id, $this->pic)->first())
+		if(VoteModel::alreadyLiked($voter->id, $this->pic->id)->first())
 			throw new AppException\ActionAlreadyDoneException;
 			
 
 		//if everything's okay, attempt to save the vote in the db
 		$vote = VoteModel::create(array(
 			'voter_id' 		=> $voter->id,
-			'picture_id' 	=> $this->pic,
+			'picture_id' 	=> $this->pic->id,
 		));
 
 		//if the vote is inserted in the db, create success message
@@ -44,5 +44,13 @@ class PictureFactory
 
 		throw new AppException\ActionTechnicalException('There was a technical error');
 		return false;
+	}
+
+	/*
+	 * @return an array of all the user models that voted the image
+	 */
+	public function getVoters()
+	{
+		return $this->pic->voters()->get(array('users.username', 'users.id'));
 	}
 }

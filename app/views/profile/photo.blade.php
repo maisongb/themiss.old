@@ -13,4 +13,10 @@
 	@endif
 
 	@yield('picture_single')
+
+	@if($voters)
+		@foreach($voters as $voter)
+			{{var_dump($voter->username)}}
+		@endforeach
+	@endif
 @stop

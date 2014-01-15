@@ -87,6 +87,8 @@ class ProfileFactory
 	 * @params -
 	 * $from - where to start the select from
 	 * $total - total # of pictures to get
+	 * $voted - true if only the voted pictures are to be fetched
+	 * $orderby - which parameter to be used for ordering the pictures
 	 * gets all the pictures of a profile and paginates them
 	 */
 	public function getPictures($params = array())

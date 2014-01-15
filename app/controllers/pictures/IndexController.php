@@ -1,8 +1,9 @@
 <?php
 namespace App\Controllers\Pictures;
 
-use \App\Lib\Picture\PictureFactory;
-use \App\Lib\Exceptions as AppException;
+use App\Lib\Picture\PictureFactory;
+use App\Models\Picture as PictureModel;
+use App\Lib\Exceptions as AppException;
 
 /*
  * IndexController
@@ -20,7 +21,7 @@ class IndexController extends \Controller
 		//if there is no picture id posted, do nothing
 		if(\Input::has('picture_id')){
 			try{
-				$vote = new PictureFactory(\Input::get('picture_id'));
+				$vote = new PictureFactory(PictureModel(\Input::get('picture_id')));
 				$vote->addVote(\Sentry::getUser());
 				
 				$ret['status'] = true;

@@ -4,6 +4,7 @@ namespace App\Controllers\Profile;
 use App\Models\Picture as PictureModel;
 use App\Models\Follow as FollowModel;
 use App\Lib\Profile\ProfileFactory;
+use App\Lib\Picture\PictureFactory;
 use App\Lib\Exceptions as AppException;
 
 /*
@@ -97,11 +98,12 @@ class IndexController extends \Controller
 
 	//single photo controller method
 	public function picture($username, $id){
-		$picture = PictureModel::whereId($id)->first();
+		$picture = new PictureFactory(PictureModel::find($id));
 
 		return \View::make('profile.photo')
-			->withPicture($picture)
+			->withPicture($picture->pic)
 			->withProfile(new ProfileFactory(\Sentry::findUserByLogin($username)))
+			->withVoters($picture->getVoters())
 			->with('user_data', new ProfileFactory(\Sentry::getUser()));
 	}
 
