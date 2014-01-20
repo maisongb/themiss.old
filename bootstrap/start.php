@@ -27,7 +27,7 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
 	'local' => array('*.local', 'foysal'),
-	'dev' => array('*.net'),
+	'stage' => array('*.net', '*.eu1.frbit.com'),
 
 ));
 
