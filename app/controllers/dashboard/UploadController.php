@@ -47,6 +47,7 @@ class UploadController extends BaseController {
 			return \View::make('dashboard.upload.facebook.albums')
 				->withAlbums($albums['data']);
 		}catch(AppExceptions\NoTokenException $e){
+			\Session::put('was_here', \Route::currentRouteName());
 			return \Redirect::to($facebook->auth_uri);
 		}
 	}

@@ -77,6 +77,7 @@ class Registration
 		        'last_name'    	=> isset($full_name[1]) ? $full_name[1] : null,
 		        'username'    	=> isset($profile['username']) ? $profile['username'] : null,
 		        'password' 		=> $profile['id'].$profile['username'],
+		        'instagram_id'	=> $profile['id'],
 		    );
 		}
 	}
@@ -95,7 +96,8 @@ class Registration
 		        'last_name'    	=> isset($profile['last_name']) ? $profile['last_name'] : null,
 		        'username'    	=> isset($profile['username']) ? $profile['username'] : null,
 		        'email'    		=> isset($profile['email']) ? $profile['email'] : null,
-		        'password' 		=> $profile['id'],
+		        'password' 		=> $profile['id'].$profile['username'],
+		        'facebook_id'	=> $profile['id'],
 		    );
 		}
 	} 

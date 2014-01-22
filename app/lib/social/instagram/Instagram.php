@@ -23,7 +23,8 @@ class Instagram extends AbstractSocial implements SocialInterface
 	public function getPhotos()
 	{
 		$this->checkToken();
-		$request_uri = 'users/'. $this->profile->user->id .'/media/recent';
+		$request_uri = 'users/'. $this->profile->user->instagram_id .'/media/recent';
+		//dd($this->profile->user->id);
 		return json_decode($this->service->request($request_uri), true);
 	}
 }

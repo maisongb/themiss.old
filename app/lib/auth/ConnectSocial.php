@@ -46,7 +46,15 @@ class ConnectSocial{
     	$instagram = \OAuth::consumer('Instagram');
 		$token = $instagram->requestAccessToken(\Input::get('code'));
 
+		$userdata = json_decode($instagram->request('users/self'), true);
+
+    	if(empty($userdata['data'])){
+    		$this->errors = 'Instagram Response Error!';
+    		return false;
+    	}
+
     	$this->instagram_token = $token->getAccessToken();
+    	$this->instagram_id = $userdata['id'];
 
     	return true;
 	}
@@ -60,7 +68,15 @@ class ConnectSocial{
     	$facebook = \OAuth::consumer('Facebook');
 		$token = $facebook->requestAccessToken(\Input::get('code'));
 
+		$userdata = json_decode($facebook->request('/me'), true);
+
+    	if(empty($userdata)){
+    		$this->errors = 'Facebook Response Error!';
+    		return false;
+    	}
+
     	$this->facebook_token = $token->getAccessToken();
+    	$this->facebook_id = $userdata['id'];
 
     	return true;
 	} 
@@ -75,13 +91,17 @@ class ConnectSocial{
 
 		if(isset($this->facebook_token) && !empty($this->facebook_token)){
 			$user->facebook_token = $this->facebook_token;
+
+			if(strlen($user->facebook_id) > 0) $user->facebook_id = $this->facebook_id;
 		}elseif(isset($this->instagram_token) && !empty($this->instagram_token)){
 			$user->instagram_token = $this->instagram_token;
+			if(strlen($user->instagram_id) > 0) $user->instagram_id = $this->instagram_id;
 		}else{
 			return false;
 		}
 
 		$user->save();
+		$this->username = $user->username;
 		return true;
 	}
 }

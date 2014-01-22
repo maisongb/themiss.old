@@ -14,7 +14,9 @@ class ConnectSocialController extends \Controller
 
 		if($connection->execute()){
 			//connection established
-			dd($connection);
+			$goto = \Session::get('was_here');
+			\Session::forget('was_here');
+			return \Redirect::route($goto, array('username' => $connection->username));
 
 		}else{
 			//something went wrong

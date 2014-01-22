@@ -49,7 +49,8 @@ abstract class AbstractSocial implements SocialInterface
 	 */
 	public function resetToken($token = null) 
 	{
-		$token = $token ? $token : $this->profile->user->access_token;
+		$u_p = strtolower($this->service_name).'_token';
+		$token = $token ? $token : $this->profile->user->$u_p;
 
 		$this->service
 			->getStorage()

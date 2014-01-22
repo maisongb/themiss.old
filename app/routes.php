@@ -118,8 +118,11 @@ Route::post('profile/unfollow', array(
 
 Route::get('test/test', function ()
 {	
-	$f = new \App\Lib\Social\SocialProvider('facebook');
-	$f = $f->provider;
-	$f->likePicture('http://themiss.local/AhmedFoysal/photo/16');
-	dd($f->alreadyLikedPicture('http://themiss.local/AhmedFoysal/photo/16'));
+	//$f = new \App\Lib\Social\SocialProvider('facebook');
+	//$f = $f->provider;
+	//$f->likePicture('http://themiss.local/AhmedFoysal/photo/16');
+	//dd($f->alreadyLikedPicture('http://themiss.local/AhmedFoysal/photo/16'));
+
+	$c = \OAuth::consumer('Instagram', \Config::get(strtolower('Instagram').'.connect'));
+	dd($c->request('users//media/recent'), true);
 });
