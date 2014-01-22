@@ -5,6 +5,7 @@ use App\Lib\Social\SocialProvider;
 use App\Lib\Uploader\Uploader;
 use App\Models\Picture;
 use App\Lib\Profile\ProfileFactory;
+use App\Lib\Exceptions as AppExceptions;
 
 /*
  * UploadController
@@ -37,13 +38,17 @@ class UploadController extends BaseController {
 	public function facebookAlbums($username)
 	{
 		$profile = new ProfileFactory(\Sentry::getUser());
-		$social = new SocialProvider($profile, 'facebook');
-		$facebook = $social->provider;
 
-		$albums = $facebook->getAlbums();
+		try{
+			$social = new SocialProvider($profile, 'facebook');
+			$facebook = $social->provider;
+			$albums = $facebook->getAlbums();
 
-		return \View::make('dashboard.upload.facebook.albums')
-					->withAlbums($albums['data']);
+			return \View::make('dashboard.upload.facebook.albums')
+				->withAlbums($albums['data']);
+		}catch(AppExceptions\NoTokenException $e){
+			return \Redirect::to($facebook->auth_uri);
+		}
 	}
 
 	public function facebookPhotos($username, $album_id)
@@ -61,12 +66,17 @@ class UploadController extends BaseController {
 	public function instagramPhotos($username)
 	{
 		$profile = new ProfileFactory(\Sentry::getUser());
-		$social = new SocialProvider($profile, 'instagram');
-		$instagram = $social->provider;
 
-		$pictures = $instagram->getPhotos();
+		try{
+			$social = new SocialProvider($profile, 'instagram');
+			$instagram = $social->provider;
+
+			$pictures = $instagram->getPhotos();
+		}catch(AppExceptions\NoTokenException $e){
+			return \Redirect::to($instagram->auth_uri);
+		}
 
 		return \View::make('dashboard.upload.instagram.pictures')
-					->withPictures($pictures['data']);
+			->withPictures($pictures['data']);
 	}
 } 

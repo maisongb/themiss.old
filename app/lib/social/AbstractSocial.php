@@ -5,8 +5,7 @@ use \OAuth;
 use \OAuth\OAuth2\Token\StdOAuth2Token;
 use \Sentry;
 use \Session;
-use \App\Lib\Social\SocialInterface;
-use \App\Lib\Social\NoTokenException;
+use App\Lib\Exceptions as AppExceptions;
 
 /**
 * Facebook Library 
@@ -21,14 +20,8 @@ abstract class AbstractSocial implements SocialInterface
 	function __construct($profile) 
 	{
 		$this->profile = $profile;
-		$this->service = OAuth::consumer($this->service_name);
-		$this->checkToken();
-	}
-
-	//checks for access token in the session
-	public function userHasToken() 
-	{
-		return strlen($this->profile->user->access_token) > 0;
+		$this->service = OAuth::consumer($this->service_name, \Config::get(strtolower($this->service_name).'.connect'));
+		$this->auth_uri = (string)$this->service->getAuthorizationUri();
 	}
 
 	/*
@@ -42,13 +35,12 @@ abstract class AbstractSocial implements SocialInterface
 		if($this->service->getStorage()->hasAccessToken($this->service_name)) 
 			return true;
 
-		if($this->userHasToken()) {
+		if($this->profile->hasProvider($this->service_name)) {
 			$this->resetToken();
 			return true;
 		}
 
-		throw new NoTokenException("Seems Like we need a new token for the user", 1);
-		return false;
+		throw new AppExceptions\NoTokenException("Seems Like we need a new token for the user", 1);
 	}
 
 	/*

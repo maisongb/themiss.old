@@ -4,8 +4,9 @@ namespace App\Lib\Social\Facebook;
 use \OAuth;
 use \Session;
 use \OAuth\OAuth2\Token\StdOAuth2Token;
-use \App\Lib\Social\AbstractSocial;
-use \App\Lib\Social\SocialInterface;
+use App\Lib\Social\AbstractSocial;
+use App\Lib\Social\SocialInterface;
+use App\Lib\Exceptions as AppExceptions;
 
 /**
 * Facebook Library 
@@ -22,6 +23,7 @@ class Facebook extends AbstractSocial
 	 */
 	public function getAlbums()
 	{
+		$this->checkToken();
 		return json_decode($this->service->request('/me/albums'), true);
 	}
 

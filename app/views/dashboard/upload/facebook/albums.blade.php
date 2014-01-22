@@ -7,7 +7,7 @@
 				<figure>
 					<a href="facebook/album/{{ $album['id'] }}" class="th">
 						<img 
-						src="https://graph.facebook.com/{{ $album['cover_photo'] }}/picture?access_token={{ $user_data->access_token }}" 
+						src="https://graph.facebook.com/{{ $album['cover_photo'] }}/picture?access_token={{ $user_data->facebook_token }}" 
 						alt="{{ $album['name'] }}">
 					</a>
 					<figcaption>{{ $album['name'] }}</figcaption>

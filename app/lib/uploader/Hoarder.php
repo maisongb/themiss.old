@@ -60,6 +60,9 @@ class Hoarder
 		if($this->provider == 'facebook')
 			return $this->saveFromFacebook($this->file);
 
+		elseif($this->provider == 'instagram')
+			return $this->saveFromInstagram($this->file);
+
 		return $this->saveFromUser();
 	}
 
@@ -86,6 +89,29 @@ class Hoarder
 
 	//takes a the url of an image on facebook and copies it to our server
 	public function saveFromFacebook($url)
+	{
+		$file_ext = explode('.', $url);
+		$file_ext = end($file_ext);
+
+		if(!$this->isValidExtension($file_ext))
+			throw new AppException\InvalidFileUpload;
+
+		//copy the file from the url to the user's directory with appropriate filename
+		$file_name = time() .'_'. $this->profile->user->id .'.'. $file_ext;
+		copy($url, $this->user_dir.$file_name);
+
+		//set the file info stuff 
+		$this->file_info = array(
+			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
+			//weird error
+			//'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
+		);
+
+		return true;
+	}
+
+	//takes a the url of an image on facebook and copies it to our server
+	public function saveFromInstagram($url)
 	{
 		$file_ext = explode('.', $url);
 		$file_ext = end($file_ext);

@@ -111,6 +111,8 @@ class ProfileFactory
 	 */
 	public function hasProvider($provider)
 	{
-		return $this->user->provider == $provider;
+		$u_p = strtolower($provider).'_token';
+		//if the token is a string that means user is connected
+		return strlen($this->user->$u_p) > 0;
 	}
 }

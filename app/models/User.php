@@ -60,4 +60,9 @@ class User extends SentryUserModel implements UserInterface, RemindableInterface
 	{
 		return $this->belongsToMany('App\Models\Picture', 'votes', 'voter_id', 'picture_id');
 	}
+
+	public function data()
+	{
+		return $this->hasOne('App\Models\UserData');
+	}
 }

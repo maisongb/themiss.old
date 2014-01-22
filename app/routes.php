@@ -17,6 +17,14 @@ Route::group(array(
 	Route::get('instagram', 'LoginController@instagramSignin');
 });
 
+Route::group(array(
+	'prefix' => 'connect_social', 
+	'namespace'	=> '\App\Controllers\Auth'
+), function(){
+	Route::get('facebook', 'ConnectSocialController@facebook');
+	Route::get('instagram', 'ConnectSocialController@instagram');
+});
+
 Route::get('logout', function(){
 	Sentry::logout();
 	return Redirect::to('/');
