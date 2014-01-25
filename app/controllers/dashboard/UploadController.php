@@ -48,6 +48,7 @@ class UploadController extends BaseController {
 				->withAlbums($albums['data']);
 		}catch(AppExceptions\NoTokenException $e){
 			\Session::put('was_here', \Route::currentRouteName());
+			\Session::put('connect_social', true);
 			return \Redirect::to($facebook->auth_uri);
 		}
 	}
@@ -74,6 +75,8 @@ class UploadController extends BaseController {
 
 			$pictures = $instagram->getPhotos();
 		}catch(AppExceptions\NoTokenException $e){
+			\Session::put('was_here', \Route::currentRouteName());
+			\Session::put('connect_social', true);
 			return \Redirect::to($instagram->auth_uri);
 		}
 

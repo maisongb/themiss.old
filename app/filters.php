@@ -45,6 +45,10 @@ Route::filter('auth.basic', function()
 });
 
 Route::filter('loggedin', function(){
+	//if the user is connecting up with social user, we let the user in to the login
+	if(Session::has('connect_social')) return;
+
+	//if the user is logged in already, we redirect to the user's profile page
 	if(Sentry::check()){
 		$user = Sentry::getUser();
 		return Redirect::to($user->username);

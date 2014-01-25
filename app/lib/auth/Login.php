@@ -54,6 +54,11 @@ class Login{
 	    	$remember = true;
 	    }
 
+	    if(Session::has('connect_social')){
+	    	$this->status = 'connect-social';
+	    	return false;
+	    }
+
 		return $this->signin($credentials, $remember);
 	}
 
@@ -74,6 +79,7 @@ class Login{
     	}
 
     	$this->instagram_token = $token->getAccessToken();
+    	$userdata['data']['instagram_token'] = $this->instagram_token;
 		Session::put('instagram.profile', $userdata['data']);
 
     	return array(
@@ -101,11 +107,12 @@ class Login{
     	}
 
     	$this->facebook_token = $token->getAccessToken();
+    	$userdata['facebook_token'] = $this->facebook_token;
 		Session::put('facebook.profile', $userdata);
 
     	return array(
     		'username' => $userdata['username'],
-    		'password' => $userdata['id'],
+    		'password' => $userdata['id'].$userdata['username'],
     	);
 	} 
 

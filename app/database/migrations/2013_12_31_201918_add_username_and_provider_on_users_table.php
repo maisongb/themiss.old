@@ -17,8 +17,8 @@ class AddUsernameAndProviderOnUsersTable extends Migration {
 				$table->string('provider');
 				$table->text('facebook_token')->nullable();
 				$table->text('instagram_token')->nullable();
-				$table->integer('facebook_id')->default(0);
-				$table->integer('instagram_id')->default(0);
+				$table->bigInteger('facebook_id')->default(0);
+				$table->bigInteger('instagram_id')->default(0);
 
 				DB::statement("ALTER TABLE users DROP email");
 				$table->string('email')->nullable();

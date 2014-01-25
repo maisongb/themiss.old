@@ -9,6 +9,7 @@ class ConnectSocial{
 	private $provider;
 	public $status;
 	public $errors;
+	public $data;
 
 	function __construct($provider){
 		$available_providers = array('facebook', 'instagram');
@@ -38,47 +39,33 @@ class ConnectSocial{
 	}
 
 	public function withInstagram(){
-		if(!\Input::has('code')){
-    		$this->errors = 'Instagram Response Error!';
-    		return false;
-    	}
+		if(\Session::has('instagram.profile')){
+			$profile 	= \Session::get('instagram.profile');
+			$this->data = array(
+		        'instagram_id'		=> $profile['id'],
+		        'instagram_token'	=> $profile['instagram_token'],
+		    );
 
-    	$instagram = \OAuth::consumer('Instagram');
-		$token = $instagram->requestAccessToken(\Input::get('code'));
+			\Session::forget('instagram.profile');
+		    return true;
+		}
 
-		$userdata = json_decode($instagram->request('users/self'), true);
-
-    	if(empty($userdata['data'])){
-    		$this->errors = 'Instagram Response Error!';
-    		return false;
-    	}
-
-    	$this->instagram_token = $token->getAccessToken();
-    	$this->instagram_id = $userdata['id'];
-
-    	return true;
+    	return false;
 	}
 
 	public function withFacebook(){
-		if(!\Input::has('code')){
-    		$this->errors = 'Facebook Response Error!';
-    		return false;
-    	}
+		if(\Session::has('facebook.profile')){
+			$profile 	= \Session::get('facebook.profile');
+			$this->data = array(
+		        'facebook_id'	=> $profile['id'],
+		        'facebook_token'	=> $profile['facebook_token'],
+		    );
 
-    	$facebook = \OAuth::consumer('Facebook');
-		$token = $facebook->requestAccessToken(\Input::get('code'));
+			\Session::forget('facebook.profile');
+		    return true;
+		}
 
-		$userdata = json_decode($facebook->request('/me'), true);
-
-    	if(empty($userdata)){
-    		$this->errors = 'Facebook Response Error!';
-    		return false;
-    	}
-
-    	$this->facebook_token = $token->getAccessToken();
-    	$this->facebook_id = $userdata['id'];
-
-    	return true;
+    	return false;
 	} 
 
 	/*
@@ -89,19 +76,33 @@ class ConnectSocial{
 	private function connect(){
 		$user = \Sentry::getUser();
 
-		if(isset($this->facebook_token) && !empty($this->facebook_token)){
-			$user->facebook_token = $this->facebook_token;
+		if(isset($this->data['facebook_token'])){
+			$user->facebook_token = $this->data['facebook_token'];
 
-			if(strlen($user->facebook_id) > 0) $user->facebook_id = $this->facebook_id;
-		}elseif(isset($this->instagram_token) && !empty($this->instagram_token)){
-			$user->instagram_token = $this->instagram_token;
-			if(strlen($user->instagram_id) > 0) $user->instagram_id = $this->instagram_id;
+			if(strlen($user->facebook_id) > 0) 
+				$user->facebook_id = $this->data['facebook_id'];
+		}elseif(isset($this->data['instagram_token'])){
+			$user->instagram_token = $this->data['instagram_token'];
+			if(strlen($user->instagram_id) > 0) 
+				$user->instagram_id = $this->data['instagram_id'];
 		}else{
 			return false;
 		}
 
 		$user->save();
-		$this->username = $user->username;
+		$this->data['username'] = $user->username;
 		return true;
+	}
+
+	/*
+	 * @clearSession method
+	 * this removes all the session vars related to social connect
+	 */
+	public function clearSessions()
+	{
+		$ses = array('connect_social', 'was_here');
+		foreach ($ses as $s) {
+			\Session::forget($s);
+		}
 	}
 }

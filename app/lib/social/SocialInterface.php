@@ -20,4 +20,11 @@ interface SocialInterface
 	 * @var token is a string that can be set from outside
 	 */
 	public function resetToken($token = null);
+
+	/*
+	 * this method return config value of the passed param
+	 * @param item string
+	 * @return string/array
+	 */
+	public function getConfig($item = '');
 }

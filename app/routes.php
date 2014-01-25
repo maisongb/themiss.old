@@ -6,23 +6,40 @@ Route::get('/', function(){
 
 //All te routes regarding the /login path
 Route::group(array(
-	'prefix' => 'login', 
+	'prefix' 	=> 'login', 
 	'namespace'	=> '\App\Controllers\Auth',
-	'before' => 'loggedin'
+	'before' 	=> 'loggedin'
 ), function(){
-	Route::get('/', 'LoginController@index');
+	Route::get('/', array(
+		'uses' 	=> 'LoginController@index',
+		'as'	=> 'login'
+	));
 	Route::post('/', 'LoginController@signin');
 
-	Route::get('facebook', 'LoginController@facebookSignin');
-	Route::get('instagram', 'LoginController@instagramSignin');
+	Route::get('facebook', array(
+		'uses' 	=> 'LoginController@facebookSignin',
+		'as'	=> 'login.facebook'
+	));
+	Route::get('instagram', array(
+		'uses' 	=> 'LoginController@instagramSignin',
+		'as'	=> 'login.instagram'
+	));
+
+	//existing users connecting to social
+	Route::get('connect/facebook', array(
+		'uses' 	=> 'ConnectSocialController@facebook',
+		'as' 	=> 'login.connect.facebook'
+	));
+	Route::get('connect/instagram', array(
+		'uses' 	=> 'ConnectSocialController@instagram',
+		'as' 	=> 'login.connect.instagram'
+	));
 });
 
 Route::group(array(
 	'prefix' => 'connect_social', 
 	'namespace'	=> '\App\Controllers\Auth'
 ), function(){
-	Route::get('facebook', 'ConnectSocialController@facebook');
-	Route::get('instagram', 'ConnectSocialController@instagram');
 });
 
 Route::get('logout', function(){
@@ -118,11 +135,18 @@ Route::post('profile/unfollow', array(
 
 Route::get('test/test', function ()
 {	
-	//$f = new \App\Lib\Social\SocialProvider('facebook');
-	//$f = $f->provider;
-	//$f->likePicture('http://themiss.local/AhmedFoysal/photo/16');
-	//dd($f->alreadyLikedPicture('http://themiss.local/AhmedFoysal/photo/16'));
+	$c = \Config::get('facebook');
+	dd($c['return']);
+});
 
-	$c = \OAuth::consumer('Instagram', \Config::get(strtolower('Instagram').'.connect'));
-	dd($c->request('users//media/recent'), true);
+Route::get('clear/session', function()
+{
+	//lusitanian_oauth_token
+	$f = OAuth::consumer('Facebook');
+	$i = OAuth::consumer('Instagram');
+
+	Session::flush();
+	session_unset();
+	
+	dd($_SESSION);
 });

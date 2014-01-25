@@ -20,7 +20,7 @@ abstract class AbstractSocial implements SocialInterface
 	function __construct($profile) 
 	{
 		$this->profile = $profile;
-		$this->service = OAuth::consumer($this->service_name, \Config::get(strtolower($this->service_name).'.connect'));
+		$this->service = OAuth::consumer($this->service_name, $this->getConfig('return'));
 		$this->auth_uri = (string)$this->service->getAuthorizationUri();
 	}
 
@@ -55,5 +55,18 @@ abstract class AbstractSocial implements SocialInterface
 		$this->service
 			->getStorage()
 			->storeAccessToken($this->service_name, new StdOAuth2Token($token));
+	}
+
+	/*
+	 * this method return config value of the passed param
+	 * @param item string
+	 * @return string/array
+	 */
+	public function getConfig($item = '')
+	{
+		if(empty($item)) return false;
+
+		$c = \Config::get(strtolower($this->service_name));
+		return $c[$item];
 	}
 }
