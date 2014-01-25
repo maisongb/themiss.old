@@ -81,7 +81,7 @@ class Hoarder
 		$this->file_info = array(
 			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
 			//weird error
-			'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
+			'size' => 10//@$this->file->getSize() ? @$this->file->getSize() : 0
 		);
 
 		return true;

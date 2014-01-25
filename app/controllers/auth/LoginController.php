@@ -35,6 +35,7 @@ class LoginController extends \Controller
         	return Redirect::to('/')
         		->withMessages('Logged in!');
         }else{
+        	dd($signin);
 			return View::make('auth.login.index')
 				->withErrors(array('login' => $signin->errors))
 				->withInput(Input::except('password'));

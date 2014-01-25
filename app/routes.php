@@ -1,8 +1,9 @@
 <?php
 
-Route::get('/', function(){
-	return View::make('index');
-});
+Route::get('/', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@index',
+	'as' => 'page.home'
+));
 
 //All te routes regarding the /login path
 Route::group(array(
@@ -147,6 +148,6 @@ Route::get('clear/session', function()
 
 	Session::flush();
 	session_unset();
-	
+
 	dd($_SESSION);
 });

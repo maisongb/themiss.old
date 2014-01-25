@@ -53,4 +53,20 @@ class PictureFactory
 	{
 		return $this->pic->voters()->get(array('users.username', 'users.id'));
 	}
+
+	/*
+	 * @param total @number of images to fetch
+	 * @param from @number from where to start fetching
+	 * @return collection of recent pictures for the homepage mainly 
+	 */
+	public function getRecentPictures($total = 10, $from = 0)
+	{
+		$pics = PictureModel::with('user')
+			->skip($from)
+			->take($total)
+			->orderBy('created_at', 'desc')
+			->get();
+
+		return $pics;
+	}
 }
