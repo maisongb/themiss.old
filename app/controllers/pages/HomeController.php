@@ -15,4 +15,16 @@ class HomeController extends \Controller
 		return \View::make('pages.home.all')
 			->withPictures($pics);
 	}
+
+	public function latest($total = 5, $from = 0)
+	{
+		$pics = new PictureFactory();
+		$pics = $pics->getRecentPictures(array(
+			'total' => $total,
+			'from' => $from
+		));
+
+		return \View::make('pictures.list')
+			->withPictures($pics);
+	}
 }

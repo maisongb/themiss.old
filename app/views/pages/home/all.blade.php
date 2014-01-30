@@ -1,24 +1,16 @@
 @extends ('layouts.master')
 
 @section('body')
-	<div class="row">
-		@foreach($pictures as $picture)
-			<div class="picture-container">
-				<figure class="picture">
-					<a href="{{route('pictures.single', array('username' => $picture->user->username, 'id' => $picture->id))}}">
-						<img src="{{$picture->url}}" alt="{{$picture->user->last_name}}">
-					</a>
-				</figure>
-
-				<div class="actions">
-					<a 
-						href="#" 
-						class="vote"
-						data-picture="{{ $picture->id }}">
-						Like
-					</a>
-				</div>
-			</div>
-		@endforeach
+	<div class="row" id="pictures">
+		@include('pictures.list')
 	</div>
+
+	<a 
+		href="#" 
+		class="button" 
+		id="load_more"
+		data-from="5"
+		data-total="5">
+		Load More
+	</a>
 @stop

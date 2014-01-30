@@ -5,6 +5,11 @@ Route::get('/', array(
 	'as' => 'page.home'
 ));
 
+Route::get('latest/{total}/{from}', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@latest',
+	'as' => 'pictures.new'
+))->where(array('total' => '[0-9]+', 'from' => '[0-9]+'));
+
 //All te routes regarding the /login path
 Route::group(array(
 	'prefix' 	=> 'login', 

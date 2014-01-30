@@ -80,8 +80,7 @@ class Hoarder
 		//set the file info stuff 
 		$this->file_info = array(
 			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
-			//weird error
-			'size' => 10//@$this->file->getSize() ? @$this->file->getSize() : 0
+			'size' => $this->file->getSize() ? $this->file->getSize() : 0
 		);
 
 		return true;
@@ -98,13 +97,11 @@ class Hoarder
 
 		//copy the file from the url to the user's directory with appropriate filename
 		$file_name = time() .'_'. $this->profile->user->id .'.'. $file_ext;
-		copy($url, $this->user_dir.$file_name);
+		$f = \File::copy($url, $this->user_dir.$file_name);
 
 		//set the file info stuff 
 		$this->file_info = array(
 			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
-			//weird error
-			//'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
 		);
 
 		return true;
@@ -121,13 +118,11 @@ class Hoarder
 
 		//copy the file from the url to the user's directory with appropriate filename
 		$file_name = time() .'_'. $this->profile->user->id .'.'. $file_ext;
-		copy($url, $this->user_dir.$file_name);
+		\File::copy($url, $this->user_dir.$file_name);
 
 		//set the file info stuff 
 		$this->file_info = array(
 			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
-			//weird error
-			//'size' => @$this->file->getSize() ? @$this->file->getSize() : 0
 		);
 
 		return true;

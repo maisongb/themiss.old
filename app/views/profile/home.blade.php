@@ -1,5 +1,4 @@
 @extends ('layouts.master')
-@include('pictures.list')
 
 @section('body')
 	@if($user_data)
@@ -11,6 +10,8 @@
 			Follow {{$profile->user->username}}
 		</a>
 	@endif
-
-	@yield('pictures_list')
+	
+	<div class="row">
+		@include('pictures.list')
+	</div>
 @stop

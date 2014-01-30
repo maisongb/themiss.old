@@ -22,6 +22,7 @@ module.exports = function(grunt) {
           'app/scripts/app.js',
           'app/scripts/votes.js',
           'app/scripts/follow.js',
+          'app/scripts/pictures.js'
         ],
         dest: 'public/js/main.js'
       }

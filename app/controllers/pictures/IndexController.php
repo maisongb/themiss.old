@@ -21,7 +21,7 @@ class IndexController extends \Controller
 		//if there is no picture id posted, do nothing
 		if(\Input::has('picture_id')){
 			try{
-				$vote = new PictureFactory(PictureModel(\Input::get('picture_id')));
+				$vote = new PictureFactory(PictureModel::find(\Input::get('picture_id')));
 				$vote->addVote(\Sentry::getUser());
 				
 				$ret['status'] = true;

@@ -59,14 +59,34 @@ class PictureFactory
 	 * @param from @number from where to start fetching
 	 * @return collection of recent pictures for the homepage mainly 
 	 */
-	public function getRecentPictures($total = 10, $from = 0)
+	public function getRecentPictures($params = array())
 	{
-		$pics = PictureModel::with('user')
-			->skip($from)
-			->take($total)
+		//we pass this closure to the eager loader to filter only
+		//the id and the username field from users table
+		$user_filter = function ($query){
+			$query->select(array('id', 'username'));
+		};
+
+		$pics = PictureModel::with(array('user' => $user_filter));
+
+		//if there's a user id passed in, we return only the pics of that user
+		if((int)array_get($params, 'user', 0) > 0){
+			$pics = $pics->where('user_id', array_get($params, 'user'));
+		}
+
+		//if there's a starting point set, we start from there
+		if((int)array_get($params, 'from', 0) > 0){
+			$pics = $pics->skip(array_get($params, 'from', 0));
+		}
+
+		return $pics
+			->take(array_get($params, 'total', 5))
 			->orderBy('created_at', 'desc')
 			->get();
+	}
 
-		return $pics;
+	public function getVotedPictures($params = array())
+	{
+		
 	}
 }

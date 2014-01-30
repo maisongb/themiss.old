@@ -2,6 +2,7 @@
 namespace App\Lib\Profile;
 
 use App\Models\Picture as PictureModel;
+use App\Lib\Picture\PictureFactory;
 use App\Models\Vote as VoteModel;
 use App\Models\User as UserModel;
 use App\Models\Follow as FollowModel;
@@ -96,13 +97,11 @@ class ProfileFactory
 		if(array_get($params, 'voted')){
 			$pictures = $this->user->votes();
 		}else{
-			$pictures = PictureModel::where('user_id', $this->user->id);
+			$pictures = new PictureFactory();
+			$pictures = $pictures->getRecentPictures(array('user' => $this->user->id));
 		}
 
-		return $pictures
-			->skip(array_get($params, 'from', 0))
-			->take(array_get($params, 'total', 10))
-			->get();
+		return $pictures;
 	}
 
 	/*
