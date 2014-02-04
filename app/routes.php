@@ -10,6 +10,16 @@ Route::get('latest/{total}/{from}', array(
 	'as' => 'pictures.new'
 ))->where(array('total' => '[0-9]+', 'from' => '[0-9]+'));
 
+Route::get('miss_of_the_month', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@missOfTheMonth',
+	'as' => 'pictures.miss_of_the_month'
+));
+
+Route::get('winners/{month?}/{year?}', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@winners',
+	'as' => 'pictures.winners'
+))->where(array('month' => '[0-9]+', 'year' => '[0-9]+'));
+
 //All te routes regarding the /login path
 Route::group(array(
 	'prefix' 	=> 'login', 
@@ -139,10 +149,21 @@ Route::post('profile/unfollow', array(
 	'uses' 	=> '\App\Controllers\Profile\IndexController@unfollow'
 ));
 
+/*
+	These routes are only accessible to the admins of the site
+*/
+Route::group(array('prefix' => 'search'), function (){
+	Route::post('username', array(
+		'as' => 'search.username',
+		'uses' => 'App\Controllers\Profile\SearchController@results'
+	));	
+});
+
 Route::get('test/test', function ()
 {	
-	$c = \Config::get('facebook');
-	dd($c['return']);
+	$user = \Sentry::getUser();
+	$group = \Sentry::findGroupByName('male');
+	var_dump($user->hasPermission(array('share')));
 });
 
 Route::get('clear/session', function()

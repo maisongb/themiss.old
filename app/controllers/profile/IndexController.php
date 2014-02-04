@@ -116,4 +116,15 @@ class IndexController extends \Controller
 			->withProfile($profile)
 			->with('user_data', new ProfileFactory(\Sentry::getUser()));
 	}
+
+	//ban a user
+	public function suspend($user_id)
+	{
+		try{
+			$throttle = Sentry::findThrottlerByUserId($user_id);
+			$throttle->suspend();
+		}catch (Cartalyst\Sentry\Users\UserNotFoundException $e){
+		    dd('User was not found.');
+		}
+	}
 }

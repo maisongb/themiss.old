@@ -13,24 +13,36 @@ App.Pictures = {
 	load: function (e, data) {
 		e.preventDefault();
 
-		var total = this.$button.data('total'),
-			from = this.$button.data('from'),
-			req = jQuery.ajax({
-				url: '/latest/'+total+'/'+from,
-				type: 'GET',
-				dataType: 'json',
-				cache: false
-			});
-		
-		req.done(function (pictures) {
-			console.log('test');
-			if(pictures.length <= 0) return;
+		var total = parseInt(this.$button.data('total')),
+			from = parseInt(this.$button.data('from'));
 
-			//insert the images in the container
-			this.$container.append(pictures);
-			//change the count of the image to get
-			this.$button.data('from', from*2);
-		});
+		if(total > 0 && from > 0){
+			var req = jQuery.ajax({
+					url: '/latest/'+total+'/'+from,
+					type: 'GET',
+					dataType: 'html'
+				});
+			
+			//if we get a response from the server
+			req.done(jQuery.proxy(this.recieved, this));
+
+			//if something went wrong on the server
+			req.fail(function (data) {
+				console.log(data);
+			});
+		}
+	},
+
+	recieved: function ($pictures) {
+		if($pictures.length <= 0){
+			this.$button.remove();
+			return;
+		}
+
+		//insert the images in the container
+		this.$container.append($pictures);
+		//change the count of the image to get
+		this.$button.data('from', parseInt(this.$button.data('from'))*2);
 	}
 };
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Lib\Uploader;
 
+use Carbon\Carbon;
 use App\Lib\Exceptions as AppException;
 
 /**
@@ -30,7 +31,7 @@ class Hoarder
 	*/
 	private function setUserDir()
 	{
-		$now = \Carbon::now();
+		$now = Carbon::now();
 
 		// the 'D' means directory, nothing pervy
 		$d_segments = array(
@@ -69,6 +70,7 @@ class Hoarder
 	public function saveFromUser()
 	{
 		$file_ext = $this->file->getClientOriginalExtension();
+		$file_size = $this->file->getSize() ? $this->file->getSize() : 0;
 
 		if(!$this->isValidExtension($file_ext))
 			throw new AppException\InvalidFileUpload;
@@ -80,7 +82,7 @@ class Hoarder
 		//set the file info stuff 
 		$this->file_info = array(
 			'path' => \URL::to(str_replace(public_path(), '', $this->user_dir) . $file_name),
-			'size' => $this->file->getSize() ? $this->file->getSize() : 0
+			'size' => $file_size
 		);
 
 		return true;

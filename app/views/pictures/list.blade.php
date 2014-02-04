@@ -7,12 +7,14 @@
 		</figure>
 
 		<div class="actions">
-			<a 
-				href="#" 
-				class="vote"
-				data-picture="{{ $picture->id }}">
-				Like
-			</a>
+			@if($picture->isVotable())
+				<a 
+					href="#" 
+					class="vote"
+					data-picture="{{ $picture->id }}">
+					Like
+				</a>
+			@endif
 		</div>
 	</div>
 @endforeach

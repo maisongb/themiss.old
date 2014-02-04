@@ -176,7 +176,6 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Sentry'		  => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
 		'OAuth' 		  => 'Artdarek\OAuth\Facade\OAuth',
-		'Carbon' 		  => 'Carbon\Carbon',
 
 	),
 

@@ -17,6 +17,12 @@ class PictureFactory
 	public function __construct($picture = false)
 	{
 		$this->pic = $picture;
+
+		//we pass this closure to the eager loader to filter only
+		//the id and the username field from users table
+		$this->user_filter = function ($query){
+			$query->select(array('id', 'username'));
+		};
 	}
 
 	/*
@@ -27,7 +33,8 @@ class PictureFactory
 	{
 		//if there is no logged in user, do nothing and return unauthorized message
 		if(!$voter) throw new AppException\ActionUnauthorizedException('User Not Logged in!');
-		if(!$this->pic) throw new AppException\ActionUnauthorizedException("Action is Not permitted for this object");
+		if(!$voter->hasPermission(array('vote'))) throw new AppException\ActionUnauthorizedException('User doesn\'t have permission!');
+		if(!$this->pic || !$this->pic->isVotable()) throw new AppException\ActionUnauthorizedException("Action is Not permitted for this object");
 		
 		if(VoteModel::alreadyLiked($voter->id, $this->pic->id)->first())
 			throw new AppException\ActionAlreadyDoneException;
@@ -61,13 +68,7 @@ class PictureFactory
 	 */
 	public function getRecentPictures($params = array())
 	{
-		//we pass this closure to the eager loader to filter only
-		//the id and the username field from users table
-		$user_filter = function ($query){
-			$query->select(array('id', 'username'));
-		};
-
-		$pics = PictureModel::with(array('user' => $user_filter));
+		$pics = PictureModel::with(array('user' => $this->user_filter));
 
 		//if there's a user id passed in, we return only the pics of that user
 		if((int)array_get($params, 'user', 0) > 0){
@@ -85,8 +86,28 @@ class PictureFactory
 			->get();
 	}
 
-	public function getVotedPictures($params = array())
+	/*
+	 * @return collection of pictures ordered by highest number of votes
+	 */
+	public function getMissOfTheMonth()
 	{
-		
+		return PictureModel::with(array('user' => $this->user_filter))
+			->take(10)
+			->onlyCurrentMonth()
+			->orderBy('likes', 'desc')
+			->get();
+	}
+
+	/*
+	 * @return collection of pictures stacked by months
+	 */
+	public function getWinners($month = 0, $year = 0)
+	{
+		return PictureModel::with(array('user' => $this->user_filter))
+			->take(10)
+			->ofMonth($month)
+			->ofYear($year)
+			->orderBy('likes', 'desc')
+			->get();
 	}
 }

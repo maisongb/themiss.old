@@ -27,4 +27,22 @@ class HomeController extends \Controller
 		return \View::make('pictures.list')
 			->withPictures($pics);
 	}
+
+	public function missOfTheMonth()
+	{
+		$pics = new PictureFactory();
+		$pics = $pics->getMissOfTheMonth();
+
+		return \View::make('pages.home.all')
+			->withPictures($pics);
+	}
+
+	public function winners($month = 0, $year = 0)
+	{
+		$pics = new PictureFactory();
+		$pics = $pics->getWinners($month, $year);
+
+		return \View::make('pages.home.all')
+			->withPictures($pics);
+	}
 }
