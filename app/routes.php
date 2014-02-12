@@ -159,6 +159,24 @@ Route::group(array('prefix' => 'search'), function (){
 	));	
 });
 
+/*
+ * routes related to surveys
+ */
+Route::group(array(
+	'prefix' => 'survey',
+	'namespace' => 'App\Controllers\Survey',
+	'before' => 'loggedin'
+), function (){
+	Route::get('{id}', array(
+		'as' => 'survey.show',
+		'uses' => 'IndexController@show'
+	));
+	Route::get('create', array(
+		'as' => 'survey.create',
+		'uses' => 'IndexController@creator'
+	));
+});
+
 Route::get('test/test', function ()
 {	
 	$user = \Sentry::getUser();

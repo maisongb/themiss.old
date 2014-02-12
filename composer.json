@@ -18,6 +18,7 @@
 			"app/controllers/pictures",
 			"app/controllers/profile",
 			"app/controllers/pages",
+			"app/controllers/surveys",
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",
