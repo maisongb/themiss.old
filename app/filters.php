@@ -55,13 +55,16 @@ Route::filter('loggedin', function(){
 	}
 });
 
-Route::filter('dashboard', function(){
-	if(!Sentry::check()){
+Route::filter('dashboard', function($route){
+	$dashboard = Sentry::findUserByLogin($route->getParameter('username'));
+	$user = Sentry::getUser();
+
+	if(!Sentry::check() || ($dashboard->id !== $user->id)){
 		return Redirect::to('login');
 	}
 
 	View::composer('dashboard.*', function ($view){
-		$view->with('user_data', Sentry::getUser());
+		$view->with('user_data', $user);
 	});
 });
 
