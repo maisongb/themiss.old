@@ -20,6 +20,7 @@ class CreatePicturesTable extends Migration {
 			$table->string('url');
 			$table->string('provider');
 			$table->integer('likes')->default(0);
+			$table->softDeletes();
 			$table->timestamps();
 		});
 	}

@@ -128,6 +128,13 @@ Route::group(array('prefix' => '{username}'), function (){
 				'uses' 	=> 'UploadController@instagramPhotos'
 			));
 		});
+
+		Route::group(array('prefix' => 'manage'), function (){
+			Route::get('pictures', array(
+				'as' => 'dashboard.manage.pictures',
+				'uses' => 'ManagementController@pictures'
+			));
+		});
 	});
 });
 

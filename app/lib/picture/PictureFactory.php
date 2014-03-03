@@ -110,4 +110,15 @@ class PictureFactory
 			->orderBy('likes', 'desc')
 			->get();
 	}
+
+	/*
+	 * throws a picture into the trash
+	 */
+	public function throwInTrash($authorizer)
+	{
+		if(!$authorizer || !$authorizer->hasPermission(array('remove'))) 
+			throw new AppException\ActionUnauthorizedException('User doesn\'t have permission!');
+		
+		return PictureModel::destroy($this->pic);
+	}
 }

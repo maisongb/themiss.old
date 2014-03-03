@@ -36,4 +36,9 @@ class IndexController extends \Controller
 		//send the json response
 		return \Response::json($ret);
 	}
+
+	public function throwInTrash()
+	{
+		
+	}
 }

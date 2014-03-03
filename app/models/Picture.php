@@ -5,6 +5,7 @@ use Carbon\Carbon;
 
 class Picture extends \Eloquent {
 	protected $table = 'pictures';
+	protected $softDelete = true;
 	protected $guarded = array();
 
 	public function user()
