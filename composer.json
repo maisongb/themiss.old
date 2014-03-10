@@ -6,9 +6,13 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"cartalyst/sentry": "2.0.*",
-		"artdarek/oauth-4-laravel": "dev-master",
-		"barryvdh/laravel-debugbar": "dev-master"
+		"artdarek/oauth-4-laravel": "dev-master"
 	},
+    "require-dev": {
+        "barryvdh/laravel-debugbar": "v1.4.3",
+        "barryvdh/laravel-ide-helper": "v1.8.1",
+        "way/generators": "2.*"
+    },
 	"autoload": {
 		"classmap": [
 			"app/commands",
