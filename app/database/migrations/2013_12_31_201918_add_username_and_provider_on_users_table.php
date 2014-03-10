@@ -15,7 +15,13 @@ class AddUsernameAndProviderOnUsersTable extends Migration {
 			Schema::table('users', function(Blueprint $table){
 				$table->string('username')->unique();
 				$table->string('provider');
-				$table->text('access_token');
+				$table->text('facebook_token')->nullable();
+				$table->text('instagram_token')->nullable();
+				$table->bigInteger('facebook_id')->default(0);
+				$table->bigInteger('instagram_id')->default(0);
+
+				DB::statement("ALTER TABLE users DROP email");
+				$table->string('email')->nullable();
 			});
 		}
 	}
@@ -29,7 +35,14 @@ class AddUsernameAndProviderOnUsersTable extends Migration {
 		if(Schema::hasTable('users')){
 			Schema::table('users', function(Blueprint $table){
 				$table->dropUnique('users_username_unique');
-				$table->dropColumn('username', 'provider', 'access_token');
+				$table->dropColumn(
+					'username', 
+					'facebook_token', 
+					'instagram_token', 
+					'facebook_id', 
+					'instagram_id', 
+					'provider'
+				);
 			});
 		}
 	}

@@ -5,6 +5,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>{{ $meta['title'] or 'The Miss' }}</title>
+
+	<meta property="og:title" content="{{ $meta['title'] or 'The Miss' }}"/>
+	<meta property="og:site_name" content="The Miss"/>
+	<meta property="og:image" content="{{ $meta['image'] or URL::to('/public') }}"/>
 	
 	{{ HTML::style('css/plugins.css') }}
 	{{ HTML::style('css/main.css') }}
@@ -26,6 +30,18 @@
 	@yield('body')
 
 	@include('layouts.bottom')
+	
+
+	<div id="fb-root"></div>
+	<script>
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=736433713035947";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
 	
 	{{ HTML::script('js/plugins.min.js') }}
 	{{ HTML::script('js/main.min.js') }}

@@ -13,7 +13,6 @@ class Login{
 	private $provider;
 	public $status;
 	public $errors;
-	private $access_token;
 
 	function __construct($provider){
 		$available_providers = array('facebook', 'instagram', 'email');
@@ -22,7 +21,6 @@ class Login{
 			throw new \RuntimeException("Oops, the provider isn't compatible!");	
 
 		$this->status = null;
-		$this->access_token = null;
 		$this->provider = $provider;
 	}
 
@@ -56,6 +54,11 @@ class Login{
 	    	$remember = true;
 	    }
 
+	    if(Session::has('connect_social')){
+	    	$this->status = 'connect-social';
+	    	return false;
+	    }
+
 		return $this->signin($credentials, $remember);
 	}
 
@@ -75,9 +78,9 @@ class Login{
     		return false;
     	}
 
-    	$this->access_token = $token->getAccessToken();
+    	$this->instagram_token = $token->getAccessToken();
+    	$userdata['data']['instagram_token'] = $this->instagram_token;
 		Session::put('instagram.profile', $userdata['data']);
-		Session::save();
 
     	return array(
     		//instagram doesnt allow email address
@@ -103,13 +106,13 @@ class Login{
     		return false;
     	}
 
-    	$this->access_token = $token->getAccessToken();
+    	$this->facebook_token = $token->getAccessToken();
+    	$userdata['facebook_token'] = $this->facebook_token;
 		Session::put('facebook.profile', $userdata);
-		Session::save();
 
     	return array(
     		'username' => $userdata['username'],
-    		'password' => $userdata['id'],
+    		'password' => $userdata['id'].$userdata['username'],
     	);
 	} 
 
@@ -124,10 +127,12 @@ class Login{
 	        // Log the user in
 	        $user = Sentry::authenticate($credentials, $remember);
 
-	        if($this->access_token){
-	        	$user->access_token = $this->access_token;
-	        	$user->save();
+	        if(isset($this->facebook_token) && !empty($this->facebook_token)){
+	        	$user->facebook_token = $this->facebook_token;
+	        }elseif(isset($this->instagram_token) && !empty($this->instagram_token)){
+	        	$user->instagram_token = $this->instagram_token;
 	        }
+	        $user->save();
 
 	        return true;
 	    }catch (\Cartalyst\Sentry\Users\LoginRequiredException $e){

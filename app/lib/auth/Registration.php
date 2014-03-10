@@ -77,6 +77,8 @@ class Registration
 		        'last_name'    	=> isset($full_name[1]) ? $full_name[1] : null,
 		        'username'    	=> isset($profile['username']) ? $profile['username'] : null,
 		        'password' 		=> $profile['id'].$profile['username'],
+		        'instagram_id'	=> $profile['id'],
+		        'instagram_token'	=> $profile['instagram_token'],
 		    );
 		}
 	}
@@ -95,7 +97,9 @@ class Registration
 		        'last_name'    	=> isset($profile['last_name']) ? $profile['last_name'] : null,
 		        'username'    	=> isset($profile['username']) ? $profile['username'] : null,
 		        'email'    		=> isset($profile['email']) ? $profile['email'] : null,
-		        'password' 		=> $profile['id'],
+		        'password' 		=> $profile['id'].$profile['username'],
+		        'facebook_id'	=> $profile['id'],
+		        'facebook_token'	=> $profile['facebook_token'],
 		    );
 		}
 	} 
@@ -114,6 +118,9 @@ class Registration
 
 		    //assign a group to the user
 		    $user->addGroup($this->group);
+
+		    //now log the user in right away
+		    Sentry::login($user, true);
 		    return true;
 		}catch (\Cartalyst\Sentry\Users\LoginRequiredException $e){
 		    $error = 'Login field is required.';

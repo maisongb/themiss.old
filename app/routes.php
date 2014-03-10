@@ -1,20 +1,61 @@
 <?php
 
-Route::get('/', function(){
-	return View::make('index');
-});
+Route::get('/', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@index',
+	'as' => 'page.home'
+));
+
+Route::get('latest/{total}/{from}', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@latest',
+	'as' => 'pictures.new'
+))->where(array('total' => '[0-9]+', 'from' => '[0-9]+'));
+
+Route::get('miss_of_the_month', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@missOfTheMonth',
+	'as' => 'pictures.miss_of_the_month'
+));
+
+Route::get('winners/{month?}/{year?}', array(
+	'uses'	=> 'App\Controllers\Pages\HomeController@winners',
+	'as' => 'pictures.winners'
+))->where(array('month' => '[0-9]+', 'year' => '[0-9]+'));
 
 //All te routes regarding the /login path
 Route::group(array(
-	'prefix' => 'login', 
+	'prefix' 	=> 'login', 
 	'namespace'	=> '\App\Controllers\Auth',
-	'before' => 'loggedin'
+	'before' 	=> 'loggedin'
 ), function(){
-	Route::get('/', 'LoginController@index');
+	Route::get('/', array(
+		'uses' 	=> 'LoginController@index',
+		'as'	=> 'login'
+	));
 	Route::post('/', 'LoginController@signin');
 
-	Route::get('facebook', 'LoginController@facebookSignin');
-	Route::get('instagram', 'LoginController@instagramSignin');
+	Route::get('facebook', array(
+		'uses' 	=> 'LoginController@facebookSignin',
+		'as'	=> 'login.facebook'
+	));
+	Route::get('instagram', array(
+		'uses' 	=> 'LoginController@instagramSignin',
+		'as'	=> 'login.instagram'
+	));
+
+	//existing users connecting to social
+	Route::get('connect/facebook', array(
+		'uses' 	=> 'ConnectSocialController@facebook',
+		'as' 	=> 'login.connect.facebook'
+	));
+	Route::get('connect/instagram', array(
+		'uses' 	=> 'ConnectSocialController@instagram',
+		'as' 	=> 'login.connect.instagram'
+	));
+});
+
+Route::group(array(
+	'prefix' => 'connect_social', 
+	'namespace'	=> '\App\Controllers\Auth'
+), function(){
 });
 
 Route::get('logout', function(){
@@ -45,6 +86,16 @@ Route::group(array('prefix' => '{username}'), function (){
 			'as'	=> 'profile.home',
 			'uses' 	=> 'IndexController@home'
 		));
+
+		Route::get('voted', array(
+			'as' => 'profile.voted',
+			'uses' => 'IndexController@voted'
+		));	
+
+		Route::get('photo/{id}', array(
+			'as' => 'pictures.single',
+			'uses' => 'IndexController@picture'
+		));	
 	});
 
 	Route::group(array(
@@ -77,12 +128,23 @@ Route::group(array('prefix' => '{username}'), function (){
 				'uses' 	=> 'UploadController@instagramPhotos'
 			));
 		});
+
+		Route::group(array('prefix' => 'manage'), function (){
+			Route::get('pictures', array(
+				'as' => 'dashboard.manage.pictures',
+				'uses' => 'ManagementController@pictures'
+			));
+		});
 	});
 });
 
 Route::post('pictures/vote/add', array(
 	'as' => 'pictures.vote.add',
 	'uses' => '\App\Controllers\Pictures\IndexController@addVote'
+));
+Route::post('pictures/remove', array(
+	'as' => 'pictures.remove',
+	'uses' => '\App\Controllers\Pictures\IndexController@remove'
 ));
 
 Route::post('profile/follow', array(
@@ -94,8 +156,49 @@ Route::post('profile/unfollow', array(
 	'uses' 	=> '\App\Controllers\Profile\IndexController@unfollow'
 ));
 
+/*
+	These routes are only accessible to the admins of the site
+*/
+Route::group(array('prefix' => 'search'), function (){
+	Route::post('username', array(
+		'as' => 'search.username',
+		'uses' => 'App\Controllers\Profile\SearchController@results'
+	));	
+});
+
+/*
+ * routes related to surveys
+ */
+Route::group(array(
+	'prefix' => 'survey',
+	'namespace' => 'App\Controllers\Survey',
+	'before' => 'loggedin'
+), function (){
+	Route::get('{id}', array(
+		'as' => 'survey.show',
+		'uses' => 'IndexController@show'
+	));
+	Route::get('create', array(
+		'as' => 'survey.create',
+		'uses' => 'IndexController@creator'
+	));
+});
+
 Route::get('test/test', function ()
 {	
-	copy('https://scontent-b.xx.fbcdn.net/hphotos-prn2/1477587_589198871128978_1180460120_s.jpg', public_path().'/pictures/img.jpg');
-	//dd($f);
+	$user = \Sentry::getUser();
+	$group = \Sentry::findGroupByName('male');
+	var_dump($user->hasPermission(array('share')));
+});
+
+Route::get('clear/session', function()
+{
+	//lusitanian_oauth_token
+	$f = OAuth::consumer('Facebook');
+	$i = OAuth::consumer('Instagram');
+
+	Session::flush();
+	session_unset();
+
+	dd($_SESSION);
 });

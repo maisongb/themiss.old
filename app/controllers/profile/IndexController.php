@@ -1,8 +1,11 @@
 <?php
 namespace App\Controllers\Profile;
 
-use \App\Models\Picture;
-use \App\Models\Follow;
+use App\Models\Picture as PictureModel;
+use App\Models\Follow as FollowModel;
+use App\Lib\Profile\ProfileFactory;
+use App\Lib\Picture\PictureFactory;
+use App\Lib\Exceptions as AppException;
 
 /*
  * IndexController
@@ -10,18 +13,12 @@ use \App\Models\Follow;
 class IndexController extends \Controller
 {
 	public function home($username){
-		$profile = \Sentry::findUserByLogin($username);
-
-		$pictures = Picture::with('user')
-			->where('user_id', $profile->id)
-			->get();
-
-		$user_data = \Sentry::getUser();
+		$profile = new ProfileFactory(\Sentry::findUserByLogin($username));
 
 		return \View::make('profile.home')
-			->withPictures($pictures)
+			->withPictures($profile->getPictures())
 			->withProfile($profile)
-			->with('user_data', $user_data);
+			->with('user_data', new ProfileFactory(\Sentry::getUser()));
 	}
 
 	public function follow()
@@ -34,37 +31,24 @@ class IndexController extends \Controller
 
 		//if there is no picture id posted, do nothing
 		if(\Input::has('user_id')){
-			$follower = \Sentry::getUser();
+			try{
+				$follower = new ProfileFactory(\Sentry::getUser());
+				$followed = \Sentry::findUserById(\Input::get('user_id'));
 
-			//if there is no logged in user, do nothing and return unauthorized message
-			if (!$follower) {
-				$ret['message'] = \Lang::get('profile.follow.unauthorized');
-				return \Response::json($ret);
-			}
-			
-			//find the user we're trying to add a follower to
-			$followed = \Sentry::findUserById(\Input::get('user_id'));
+				$follower->startFollowing($followed);
 
-			//check if the user has already been followed by the follower
-			if($follower->hasFollowed($followed->id)){
-				$ret['message'] = \Lang::get(
-					'profile.follow.already_followed', 
-					array('name' => $followed->username)
-				);
-				return \Response::json($ret);
-			}
-
-			//if everything's okay, attempt to save the follow in the db
-			$follow = Follow::create(array(
-				'follower_id' 	=> $follower->id,
-				'user_id' 		=> $followed->id,
-			));
-
-			//if the follow is inserted in the db, create success message
-			if ($follow) {
 				$ret['status'] = true;
 				$ret['message'] = \Lang::get(
 					'profile.follow.success', 
+					array('name' => $followed->username)
+				);
+			}catch(AppException\ActionUnauthorizedException $e){
+				//if there is no logged in user, do nothing and return unauthorized message
+				$ret['message'] = \Lang::get('profile.follow.unauthorized');
+			}catch(AppException\ActionAlreadyDoneException $e){
+				//check if the user has already been followed by the follower
+				$ret['message'] = \Lang::get(
+					'profile.follow.already_followed', 
 					array('name' => $followed->username)
 				);
 			}
@@ -84,39 +68,63 @@ class IndexController extends \Controller
 
 		//if there is no picture id posted, do nothing
 		if(\Input::has('user_id')){
-			$follower = \Sentry::getUser();
+			try{
+				$follower = new ProfileFactory(\Sentry::getUser());
+				//find the user we're trying to add a follower to
+				$followed = \Sentry::findUserById(\Input::get('user_id'));
 
-			//if there is no logged in user, do nothing and return unauthorized message
-			if (!$follower) {
+				$follower->stopFollowing($followed);
+
+				$ret['status'] = true;
+				$ret['message'] = \Lang::get(
+					'profile.unfollow.success', 
+					array('name' => $followed->username)
+				);
+			}catch(AppException\ActionUnauthorizedException $e){
+				//if there is no logged in user, do nothing and return unauthorized message
 				$ret['message'] = \Lang::get('profile.unfollow.unauthorized');
-				return \Response::json($ret);
-			}
-			
-			//find the user we're trying to add a follower to
-			$followed = \Sentry::findUserById(\Input::get('user_id'));
-
-			//check if the user has already been followed by the follower
-			$has_followed = $follower->hasFollowed($followed->id);
-			if(!$has_followed){
+			}catch(AppException\ActionAlreadyDoneException $e){
+				//check if the user has already been followed by the follower
 				$ret['message'] = \Lang::get(
 					'profile.unfollow.not_followed', 
 					array('name' => $followed->username)
 				);
-				return \Response::json($ret);
 			}
-
-			//if everything's okay, attempt to remove the follow entry from the db
-			//if the follow entry is inserted in the db, create success message
-			$has_followed->delete();
-
-			$ret['status'] = true;
-			$ret['message'] = \Lang::get(
-				'profile.unfollow.success', 
-				array('name' => $followed->username)
-			);
 		}
 
 		//send the json response
 		return \Response::json($ret);
+	}
+
+	//single photo controller method
+	public function picture($username, $id){
+		$picture = new PictureFactory(PictureModel::find($id));
+
+		return \View::make('profile.photo')
+			->withPicture($picture->pic)
+			->withProfile(new ProfileFactory(\Sentry::findUserByLogin($username)))
+			->withVoters($picture->getVoters())
+			->with('user_data', new ProfileFactory(\Sentry::getUser()));
+	}
+
+	//voted photo controller method
+	public function voted($username){
+		$profile = new ProfileFactory(\Sentry::findUserByLogin($username));
+
+		return \View::make('profile.home')
+			->withPictures($profile->getPictures(array('voted' => true)))
+			->withProfile($profile)
+			->with('user_data', new ProfileFactory(\Sentry::getUser()));
+	}
+
+	//ban a user
+	public function suspend($user_id)
+	{
+		try{
+			$throttle = Sentry::findThrottlerByUserId($user_id);
+			$throttle->suspend();
+		}catch (Cartalyst\Sentry\Users\UserNotFoundException $e){
+		    dd('User was not found.');
+		}
 	}
 }

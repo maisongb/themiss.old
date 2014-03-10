@@ -7,9 +7,6 @@ namespace App\Lib\Social;
 */
 interface SocialInterface
 {
-	//checks for access token in the db
-	public function userHasToken();
-
 	/*
 	 * this method checks if there's a token set in the session
 	 * if no, then it tries to resets the token of the service provider
@@ -23,4 +20,11 @@ interface SocialInterface
 	 * @var token is a string that can be set from outside
 	 */
 	public function resetToken($token = null);
+
+	/*
+	 * this method return config value of the passed param
+	 * @param item string
+	 * @return string/array
+	 */
+	public function getConfig($item = '');
 }

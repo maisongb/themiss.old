@@ -2,10 +2,13 @@
 /vendor
 /.sass-cache
 /app/config/local
+/app/config/stage
 /app/config/packages
 /app/scripts/plugins
 /node_modules
+/public/pictures
 composer.phar
 composer.lock
 .DS_Store
 Thumbs.db
+.elasticbeanstalk/

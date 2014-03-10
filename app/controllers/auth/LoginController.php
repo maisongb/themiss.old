@@ -30,10 +30,12 @@ class LoginController extends \Controller
 	{
         $signin = new \App\Lib\Auth\Login('email');
 
+        //if registration worked, well done
         if($signin->execute() == true){
         	return Redirect::to('/')
         		->withMessages('Logged in!');
         }else{
+        	dd($signin);
 			return View::make('auth.login.index')
 				->withErrors(array('login' => $signin->errors))
 				->withInput(Input::except('password'));
@@ -44,13 +46,18 @@ class LoginController extends \Controller
 	{
 		$signin = new \App\Lib\Auth\Login('facebook');
 
+        //if registration worked, well done
 		if($signin->execute() === true){
 			return Redirect::to('/')
         		->withMessages('Logged in!');
 		}elseif($signin->status == 'not-found'){
+	        //if the user is not found in the db
+			//we redirect to the registration confirmation page
 			return Redirect::to('/register/facebook/confirm');
+		}elseif($signin->status == 'connect-social'){
+			return Redirect::route('login.connect.facebook');
 		}else{
-			dd($signin->errors);
+			dd($signin);
 		}
 	}
 
@@ -58,11 +65,16 @@ class LoginController extends \Controller
 	{
 		$signin = new \App\Lib\Auth\Login('instagram');
 
+        //if registration worked, well done
 		if($signin->execute() === true){
 			return Redirect::to('/')
         		->withMessages('Logged in!');
 		}elseif($signin->status == 'not-found'){
+	        //if the user is not found in the db
+			//we redirect to the registration confirmation page
 			return Redirect::to('/register/instagram/confirm');
+		}elseif($signin->status == 'connect-social'){
+			return Redirect::route('login.connect.instagram');
 		}else{
 			dd($signin->errors);
 		}

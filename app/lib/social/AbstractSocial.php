@@ -5,8 +5,7 @@ use \OAuth;
 use \OAuth\OAuth2\Token\StdOAuth2Token;
 use \Sentry;
 use \Session;
-use \App\Lib\Social\SocialInterface;
-use \App\Lib\Social\NoTokenException;
+use App\Lib\Exceptions as AppExceptions;
 
 /**
 * Facebook Library 
@@ -16,19 +15,13 @@ abstract class AbstractSocial implements SocialInterface
 {
 	public $service_name;
 	public $service;
-	public $user;
+	public $profile;
 
-	function __construct() 
+	function __construct($profile) 
 	{
-		$this->user = Sentry::getUser();
-		$this->service = OAuth::consumer($this->service_name);
-		$this->checkToken();
-	}
-
-	//checks for access token in the session
-	public function userHasToken() 
-	{
-		return strlen($this->user->access_token) > 0;
+		$this->profile = $profile;
+		$this->service = OAuth::consumer($this->service_name, $this->getConfig('return'));
+		$this->auth_uri = (string)$this->service->getAuthorizationUri();
 	}
 
 	/*
@@ -42,13 +35,12 @@ abstract class AbstractSocial implements SocialInterface
 		if($this->service->getStorage()->hasAccessToken($this->service_name)) 
 			return true;
 
-		if($this->userHasToken()) {
+		if($this->profile->hasProvider($this->service_name)) {
 			$this->resetToken();
 			return true;
 		}
 
-		throw new NoTokenException("Seems Like we need a new token for the user", 1);
-		return false;
+		throw new AppExceptions\NoTokenException("Seems Like we need a new token for the user", 1);
 	}
 
 	/*
@@ -57,10 +49,24 @@ abstract class AbstractSocial implements SocialInterface
 	 */
 	public function resetToken($token = null) 
 	{
-		$token = $token ? $token : $this->user->access_token;
+		$u_p = strtolower($this->service_name).'_token';
+		$token = $token ? $token : $this->profile->user->$u_p;
 
 		$this->service
 			->getStorage()
 			->storeAccessToken($this->service_name, new StdOAuth2Token($token));
+	}
+
+	/*
+	 * this method return config value of the passed param
+	 * @param item string
+	 * @return string/array
+	 */
+	public function getConfig($item = '')
+	{
+		if(empty($item)) return false;
+
+		$c = \Config::get(strtolower($this->service_name));
+		return $c[$item];
 	}
 }
