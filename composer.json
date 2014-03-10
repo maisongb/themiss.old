@@ -6,9 +6,12 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"cartalyst/sentry": "2.0.*",
-		"artdarek/oauth-4-laravel": "dev-master",
-		"nesbot/Carbon": "1.7.*",
-		"barryvdh/laravel-debugbar": "1.*"
+		"artdarek/oauth-4-laravel": "dev-master"
+		
+	},
+	"require-dev": {
+		"barryvdh/laravel-debugbar": "1.*",
+		"way/generators": "2.*"
 	},
 	"autoload": {
 		"classmap": [
