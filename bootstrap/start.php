@@ -24,13 +24,10 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
-
-	'local' => array('*.local', 'foysal'),
-	'stage' => array('*.net', '*.eu1.frbit.com'),
-
-));
-
+$env = $app->detectEnvironment(function()
+{
+    return getenv('APPLICATION_ENVIRONMENT') ?: 'local';
+});
 /*
 |--------------------------------------------------------------------------
 | Bind Paths
