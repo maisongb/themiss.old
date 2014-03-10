@@ -2,7 +2,7 @@
 /vendor
 /.sass-cache
 /app/config/local
-/app/config/stage
+/app/config/staging
 /app/config/packages
 /app/scripts/plugins
 /node_modules
